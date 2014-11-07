@@ -1,0 +1,116 @@
+1: 64
+2: INPT
+3: 0
+
+COPY
+3
+23
+COPY
+1
+25
+COPY
+1
+3999
+
+
+22: DECR
+24: INCR
+26: COPY
+25
+3999
+GOTO
+22
+
+
+3998: OUTP
+
+
+4100: COPY
+4998
+3998
+COPY
+4999
+3999
+
+4150: DECR
+4151: 10
+4152: INPT
+4153: 0
+COPY
+4153
+6000
+INCR
+6000
+INCR
+0
+COPY
+4158
+4156
+GOTO
+4150
+
+4199: 4300
+4200: COPY
+4199
+5001
+
+4205: 10
+4206: 6010
+4207: COPY
+4208: 4206
+4209: 4211
+4210: COPY
+4211: 0
+4212: 4331
+4213: GOTO
+4330
+
+
+#Subroutine: 5n^3
+4330: 0
+4331: 0 #value
+
+
+#Subroutine x+y
+4444: COPY
+4446: 4460
+4447: 3999
+4448: DECR
+$addy:   0
+4450: INCR
+$addx:   0
+GOTO
+4448
+
+4460: 4490
+GOTO
+$addcb: 0
+
+#subroutine x*y
+$mulx: 0
+$mulres: 0
+4600: copy
+$muladdend
+$addcb
+$mulloop: DECR
+$muly: 0
+copy
+$mulres
+$addx
+copy
+$mulx
+$addy
+GOTO
+$add
+$muladdend: COPY
+$addx
+$mulres
+GOTO
+$mulloop
+
+4996: GOTO
+4997: 5500
+4998: GOTO
+4999: 5000
+5000: GOTO
+5001: 4200

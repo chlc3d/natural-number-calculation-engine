@@ -1,0 +1,643 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"html_r",
+				"html_rootdir"
+			],
+			[
+				"html",
+				"htmlpath"
+			],
+			[
+				"print",
+				"print_leafs"
+			],
+			[
+				"new",
+				"new_new_lemmas"
+			],
+			[
+				"Codeg",
+				"CodegenTest"
+			],
+			[
+				"res",
+				"recursive"
+			],
+			[
+				"Code",
+				"CodegenTest"
+			],
+			[
+				"Co",
+				"CodegenTest"
+			],
+			[
+				"opc",
+				"opcodes"
+			],
+			[
+				"args",
+				"args_map"
+			],
+			[
+				"Op",
+				"OpcodeSeq"
+			],
+			[
+				"Opc",
+				"OpcodeSeq"
+			],
+			[
+				"defin",
+				"defined_functions"
+			],
+			[
+				"label",
+				"label_count"
+			],
+			[
+				"defi",
+				"defined_functions"
+			],
+			[
+				"param",
+				"param_defs"
+			],
+			[
+				"Func",
+				"FunctionObject"
+			],
+			[
+				"f",
+				"function_name"
+			],
+			[
+				"func",
+				"function_name"
+			],
+			[
+				"Opco",
+				"OpcodeCallList"
+			],
+			[
+				"op",
+				"opcode_stack"
+			],
+			[
+				"lable",
+				"label_count"
+			],
+			[
+				"Funct",
+				"FunctionTable"
+			],
+			[
+				"parse",
+				"parse_ftn"
+			],
+			[
+				"funct",
+				"Function"
+			],
+			[
+				"get_",
+				"get_dirty"
+			],
+			[
+				"Toke",
+				"TokenType"
+			],
+			[
+				"File",
+				"FileStream"
+			],
+			[
+				"Parser",
+				"Parser1"
+			],
+			[
+				"Pa",
+				"Parser2"
+			],
+			[
+				"Str",
+				"StrParser"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 390.0,
+		"selected_items":
+		[
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"mark",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"ma",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"mar",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"markd",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"",
+				"Convert Case: Title Case"
+			],
+			[
+				"m",
+				"Bookmarks: Toggle"
+			],
+			[
+				"setsynmark",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 575.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/tim/Dropbox/code/vandergraff"
+	],
+	"file_history":
+	[
+		"/home/tim/Dropbox/website/html/index.html",
+		"/etc/nginx/nginx.conf",
+		"/etc/nginx/sites-available/timtimtim.website",
+		"/home/tim/Dropbox/code/vandergraff/ex.txt",
+		"/home/tim/Dropbox/website/index.md",
+		"/home/tim/.budgetrc",
+		"/home/tim/budgetwarrior/Makefile",
+		"/home/tim/Dropbox/website/html/ethics.md",
+		"/home/tim/Dropbox/website/untitled",
+		"/home/tim/Dropbox/website/logic_ethics.md",
+		"/home/tim/Dropbox/website/ethics.md",
+		"/home/tim/Dropbox/code/vandergraff/bfi.txt",
+		"/home/tim/Dropbox/code/vandergraff/decr.py",
+		"/home/tim/Desktop/test.py",
+		"/home/tim/Dropbox/code/vandergraff/asm.py",
+		"/home/tim/Dropbox/code/vandergraff/out.txt",
+		"/home/tim/Dropbox/code/vandergraff/bfitest.nn",
+		"/home/tim/Dropbox/workspaces/workspaces.txt",
+		"/home/tim/Dropbox/workspaces.txt",
+		"/home/tim/Dropbox/wstoy.py",
+		"/home/tim/Dropbox/code/vandergraff/bfitest.txt",
+		"/home/tim/Dropbox/goals.txt",
+		"/home/tim/Desktop/mui.py",
+		"/home/tim/Desktop/brainfuck.txt",
+		"/media/tim/BC18445518441136/Users/Tim/AppData/Local/Google/Chrome/User Data/Default/Bookmarks",
+		"/home/tim/expedition/vm.rs",
+		"/etc/ssh/ssh_config",
+		"/etc/ssh/ssh_gconfig",
+		"/home/tim/Dropbox/code/rust/smile/vm_codegen.rs",
+		"/home/tim/Dropbox/code/rust/smile/vm.rs",
+		"/home/tim/Dropbox/code/rust/smile/smile.rs",
+		"/home/tim/Dropbox/code/rust/smile/parse.rs",
+		"/home/tim/Dropbox/code/rust/smile/smile2",
+		"/home/tim/Dropbox/code/rust/smile/smile",
+		"/home/tim/Downloads/parsec-2.0/Text/ParserCombinators/Parsec/Language.hs",
+		"/home/tim/Downloads/parsec-2.0/examples/tiger/Tiger.hs",
+		"/home/tim/Desktop/noisegen/pix/noise.spi",
+		"/home/tim/Desktop/noisegen/pix/fun_sine.spi",
+		"/home/tim/.xmonad/xmonad.desktop",
+		"/home/tim/Downloads/parsec-2.0/Text/ParserCombinators/Parsec/Combinator.hs",
+		"/home/tim/Downloads/parsec-2.0/Text/ParserCombinators/Parsec/Prim.hs",
+		"/home/tim/Downloads/parsec-2.0/Text/ParserCombinators/Parsec/Expr.hs",
+		"/home/tim/Desktop/noisegen/noise.rs",
+		"/home/tim/Desktop/perlin_experiment.py",
+		"/home/tim/Desktop/noisegen/spittle.rs",
+		"/usr/local/apache2/conf/httpd.conf",
+		"/home/tim/.xmonad/start-xmonad",
+		"/home/tim/.xmonad/xmonad.hs",
+		"/home/tim/.xmonad/xmonad.hi",
+		"/etc/X11/xorg.conf",
+		"/home/tim/Desktop/noisegen/spittle.rs~",
+		"/home/tim/Desktop/noisegen/warns.txt",
+		"/home/tim/Desktop/noisegen/g",
+		"/home/tim/Desktop/noisegen/spittle"
+	],
+	"find":
+	{
+		"height": 31.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"Edit",
+			"Create",
+			"#####",
+			"##### ",
+			"   \\|   \\|   \\|\\n",
+			"   |   |   |\\n",
+			"   |   |   |",
+			"harm",
+			"-",
+			"a",
+			"modell",
+			"∀x",
+			"10000000",
+			" ",
+			">>> ",
+			"`",
+			"# ",
+			"interpreterloop",
+			"^(zero|one|startloop|endloop)$",
+			"zero",
+			"endloop",
+			"^end",
+			"^end$",
+			"end",
+			"\\$(\\w+)",
+			"$DATA",
+			" $",
+			"$DATA",
+			"data_start_address",
+			"DATA",
+			"DATAPTR",
+			"data_start",
+			"initial_data_start_address",
+			"data_start_address",
+			"instr_start",
+			"INSTR_COUNT",
+			"$trap",
+			"###",
+			"\n###We",
+			"###",
+			"OUTPD",
+			"CURRENT_POS",
+			"CURRENT_POS_INDIRECT",
+			"CURRENT_POS",
+			"CURRENT_POS_INDIRECT",
+			"CURRENT_POS",
+			"outpd",
+			"DROPVAL",
+			"CURR_ADDR",
+			"dropretval",
+			"DROPRETVAL",
+			"DROP_ADDR",
+			"DROP_LEN",
+			"$TAB",
+			"$VAL",
+			"$val",
+			"\n$val",
+			"$VAL",
+			"VAL",
+			"66",
+			"CURRENT_POS",
+			"VAL",
+			"\n$VAL",
+			"$val",
+			"drop",
+			"BF_INPUT",
+			"INPUT",
+			"reg_a",
+			"incr2",
+			"$incr",
+			"incr1",
+			"\n$incr1",
+			"$incr",
+			"incr1",
+			"INCR2",
+			"BF_INPUT",
+			"$",
+			"BF_LOOP_REST",
+			"BF_LOOP_START",
+			"BF_LOOP_REST",
+			"BF_DECR",
+			"BF_DECR_REST",
+			"BF_MOVE_LEFT",
+			"TESTCTRL_END",
+			"TESTCTRL_START",
+			"LOCAL1",
+			"TESTEQ",
+			"DATAPTR_MR",
+			"INCR",
+			"testnegative",
+			"TESTNEGATIVE",
+			"BF_INCR_REST",
+			"CHKOUT",
+			"CURR_ADDR",
+			"vec!\\[eat([^\\]]*)\\]",
+			"\\+ vec!\\[\\]",
+			",(\\s*)eat\\(\"(\\w+)\"\\)(,?)",
+			",(\\s*)eat\\(\"(\\w+)\"\\)",
+			"Eat",
+			"eat",
+			"let mut fix.op_stak",
+			"userftns",
+			"codegen.",
+			"codegen",
+			"Codegen",
+			"codegen",
+			"Codegen",
+			"codegen",
+			"	let codegen = Codegen {recursive: true};",
+			"userftns",
+			"empty",
+			"op_stak",
+			"label_count",
+			"	let mut userftns = HashMap::new();",
+			"	let empty = HashMap::new();",
+			"let userftns = HashMap::new();",
+			"label_count",
+			"let mut op_stak",
+			"	let mut label_count = 0;",
+			"label_count",
+			"() {",
+			"\n	",
+			"test_cap_codegen() {\n",
+			"() {",
+			"Eat",
+			"eat",
+			"Eat",
+			"eat"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"\\n",
+			"    ",
+			"\\U\\1",
+			"ZERO",
+			"endinterpret",
+			"\\L\\1",
+			"\\L&",
+			"eat\\1",
+			"",
+			"] + eat(\"\\2\") + vec![",
+			"&empty,",
+			", &empty",
+			"Vec::new",
+			"    ",
+			"\\1[\\3]",
+			"\\1\\[",
+			"\\1[\\3]"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 31.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 112.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "vandergraff.sublime-project",
+	"replace":
+	{
+		"height": 58.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"wo",
+				"~/Dropbox/workspaces/workspaces.txt"
+			],
+			[
+				"index",
+				"website/md/index.md"
+			],
+			[
+				"wor",
+				"~/Dropbox/workspaces/workspaces.txt"
+			],
+			[
+				"eth",
+				"~/Dropbox/website/md/ethics.md"
+			],
+			[
+				"work",
+				"~/Dropbox/workspaces/workspaces.txt"
+			],
+			[
+				"logic",
+				"~/Dropbox/website/logic_ethics.md"
+			],
+			[
+				"et",
+				"~/Dropbox/website/ethics.md"
+			],
+			[
+				"vmc",
+				"vm_codegen.rs"
+			],
+			[
+				"vmr",
+				"vm.rs"
+			],
+			[
+				"smil",
+				"smile.rs"
+			],
+			[
+				"vmco",
+				"vm_codegen.rs"
+			],
+			[
+				"pars",
+				"parse.rs"
+			],
+			[
+				"cod",
+				"vm_codegen.rs"
+			],
+			[
+				"xmon",
+				"~/.xmonad/xmonad.hs"
+			],
+			[
+				"star",
+				"~/.xmonad/start-xmonad"
+			],
+			[
+				"gener",
+				"generator.rs"
+			],
+			[
+				"g",
+				"generator.rs"
+			],
+			[
+				"valueset",
+				"value_set.rs"
+			],
+			[
+				"spittl",
+				"spittle.rs"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

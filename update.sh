@@ -1,0 +1,1 @@
+python asm.py bfi.txt > out.txt; python decr.py out.txt
