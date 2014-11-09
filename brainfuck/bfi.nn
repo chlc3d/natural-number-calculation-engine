@@ -26,6 +26,15 @@ COPY
 inp
 nulltest
 
+{ #debug
+#	COPY
+#	inp
+#	deb_inpt
+#
+#	OUTPD
+#	deb_inpt:0
+}
+
 DECR
 nulltest: 0
 
@@ -84,16 +93,22 @@ iptr
 eol_incr1
 
 { # Debug code!
-	#COPY
-	#iptr
-	#debug_itr
-
-	#COPY
-	#debug_itr:0
-	#debug_result
-
-	#OUTPD
-	#debug_result:0
+#	COPY
+#	iptr
+#	debug_itr
+#
+#	COPY
+#	debug_itr:0
+#	debug_result
+#
+#	COPY
+#	iptr
+#	debug_ptr
+#
+#	OUTPD
+#	debug_ptr:0
+#	OUTPD
+#	debug_result:0
 }
 
 INCR
@@ -106,13 +121,9 @@ iptr
 INCR
 instr_count: 0
 
-
-
 GOTO
 readloop
 endread: endread
-OUTPD
-33131
 
 ##########################################
 # End-of-read nonsense
