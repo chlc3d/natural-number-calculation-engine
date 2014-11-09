@@ -5,10 +5,14 @@ debug = False
 pc = 0
 EOF = 0
 program = open(sys.argv[1]).readlines()
-if len(sys.argv) > 2:
-	input = open(sys.argv[2], 'rb').read()
-else:
-	input = ''
+
+user_input = ''
+for f in sys.argv[2:]:
+	user_input += open(f, 'rb').read()
+	user_input += chr(0)
+
+print ':'.join(x.encode('hex') for x in user_input)
+
 
 memory = dict()
 
@@ -59,6 +63,10 @@ while pc <= max_pc:
 
 	def _decr():
 		global pc
+		#print '---'
+
+		#print pc+1
+		#print memory[pc+1]
 		val = get_int(memory, pc+1)
 		if debug:
 			print "%s: decr %s" % (pc, val)
@@ -92,16 +100,16 @@ while pc <= max_pc:
 
 		pc += 1
 
-	def _input():
+	def _user_input():
 		global pc
-		global input
-		if input == "":
+		global user_input
+		if user_input == "":
 			memory[pc+1] = EOF
 		else:
-			memory[pc+1] = ord(input[0])
-			input = input[1:]
+			memory[pc+1] = ord(user_input[0])
+			user_input = user_input[1:]
 		if debug:
-			print "%s: Input < %s" % (pc, memory[pc+1])
+			print "%s: user_input < %s" % (pc, memory[pc+1])
 		pc += 1
 
 	def _output():
@@ -119,11 +127,12 @@ while pc <= max_pc:
 		"decr": _decr,
 		"goto": _goto,
 		"copy": _copy,
-		"inpt": _input,
+		"inpt": _user_input,
 		"outp": _output,
 		"outpd": _debug_output
 	}[get(memory, pc).lower()]()
 
 print ""
 print "final PC: %s" % pc
-print "final memory: %s" % sorted(memory.items())
+if debug:
+	print "final memory: %s" % sorted(memory.items())

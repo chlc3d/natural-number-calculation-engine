@@ -10,6 +10,10 @@ newlines = []
 #first pass:
 #Find symbolic addresses
 for idx, line in enumerate(program):
+
+	#remove braces, they're used for the meta-assembler!
+	line = filter(lambda x: x != '{' and x != '}', line)
+	line = line.strip()
 	line = ''.join(line.split('#')[0].split())
 	line_segs = line.split(":")
 	if line != '':
