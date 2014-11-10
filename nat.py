@@ -22,6 +22,12 @@ class State:
 			"number": 0
 		}
 
+	def num_instructions_executed(self):
+		sm = 0
+		for name,count in self.executed_instructions.items():
+			if name != 'number':
+				sm += count
+		return sm
 	def get(self):
 		return self.memory.get(self.pc, 0)
 
@@ -114,7 +120,8 @@ def interpret(debug, program_path, input_files):
 		user_input += open(f, 'rb').read()
 		user_input += chr(0)
 
-	print ':'.join(x.encode('hex') for x in user_input)
+	if debug:
+		print ':'.join(x.encode('hex') for x in user_input)
 
 	state = State(memory=dict(), tape=user_input)
 
