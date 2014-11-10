@@ -11,7 +11,6 @@ readloop
 98: GOTO
 trap: 0
 
-
 ##########################################
 # Program input section
 ##########################################
@@ -69,13 +68,98 @@ COPY
 table_start
 dropaddr
 
-COPY
-afterdrop
-dropretaddr
+{
+	##########################################
+	# DROP subroutine
+	##########################################
+	# DROP is a hairy beast.
+	# Basically, this maps buckets of numbers to
+	# single numbers.
+	# dropaddr points to the zeroth bucket,
+	#	loop:
+	#		dropval -= dropaddr[i] + 1
+	#	return i+1
+	# dropretval is used as the return register.
+	#
+	# Note that the logic of loop above implies
+	# that you want each element of dropaddr
+	# to be one smaller than the bucket it accepts
+	#
+	# given dropaddr = [4,3,3,2]
+	# 0 - 4 => 1
+	# 5 - 8 => 2
+	# 9 - 11 => 3
+	# 12 - 14 => 4
+	# 15 and up => Depends what's floating around memory!
 
-GOTO
-DROP
-afterdrop: afterdrop
+	#setup
+	dropaddr:0
+	DROP:DROP
+
+	#args
+	#dropretaddr: 0 (THE RETURN ADDRESS)
+	#dropval: 0 (THE INPUT/OUTPUT NUMBER)
+	#droplen: 0 (THE LENGTH OF THE INPUT TABLE)
+	#dropaddr: 0 (THE ADDRESS OF THE INPUT TABLE)
+
+	COPY
+	ZERO
+	dropretval
+
+	goto
+	firstdroploop
+
+	droploop:droploop
+
+	#increment address
+	COPY
+	dropaddr
+	da_incr
+	INCR
+	da_incr: 0
+	COPY
+	da_incr
+	dropaddr
+
+	firstdroploop:0
+	#update result value
+	INCR
+	dropretval: 0
+
+	#Compute the table element.
+	#We'll decrement the value this number of times.
+	COPY
+	dropaddr
+	dropaddr_indirect
+	COPY
+	dropaddr_indirect:0
+	drop_table_elem
+
+	#output table element for debugging
+
+	drop_inner_loop:0
+
+	#subtract one from the total value.
+	#On failure, we're done!
+	COPY
+	dropfail
+	trap
+	DECR
+	dropval:0
+
+	#subtract one from the loop variable
+	#On failure, repeat the drop loop!
+	COPY
+	droploop
+	trap
+	DECR
+	drop_table_elem:0
+
+	GOTO
+	drop_inner_loop
+
+	dropfail: dropfail
+}
 
 #Copy the value into our instruction list.
 COPY
@@ -253,7 +337,7 @@ GOTO
 interpreterloop
 
 ##########################################
-# BrainFuck Subroutines
+# Brainfuck Subroutines
 ##########################################
 
 #EOF = 0 (end)
@@ -973,100 +1057,6 @@ deinterlace_data:deinterlace_data
 
 GOTO
 post_deinterlace:post_deinterlace
-
-##########################################
-# DROP subroutine
-##########################################
-# DROP is a hairy beast.
-# Basically, this maps buckets of numbers to
-# single numbers.
-# dropaddr points to the zeroth bucket,
-#	loop:
-#		dropval -= dropaddr[i] + 1
-#	return i+1
-# dropretval is used as the return register.
-#
-# Note that the logic of loop above implies
-# that you want each element of dropaddr
-# to be one smaller than the bucket it accepts
-#
-# given dropaddr = [4,3,3,2]
-# 0 - 4 => 1
-# 5 - 8 => 2
-# 9 - 11 => 3
-# 12 - 14 => 4
-# 15 and up => Depends what's floating around memory!
-
-#setup
-dropaddr:0
-DROP:DROP
-
-#args
-#dropretaddr: 0 (THE RETURN ADDRESS)
-#dropval: 0 (THE INPUT/OUTPUT NUMBER)
-#droplen: 0 (THE LENGTH OF THE INPUT TABLE)
-#dropaddr: 0 (THE ADDRESS OF THE INPUT TABLE)
-
-COPY
-ZERO
-dropretval
-
-goto
-firstdroploop
-
-droploop:droploop
-
-#increment address
-COPY
-dropaddr
-da_incr
-INCR
-da_incr: 0
-COPY
-da_incr
-dropaddr
-
-firstdroploop:0
-#update result value
-INCR
-dropretval: 0
-
-#Compute the table element.
-#We'll decrement the value this number of times.
-COPY
-dropaddr
-dropaddr_indirect
-COPY
-dropaddr_indirect:0
-drop_table_elem
-
-#output table element for debugging
-
-drop_inner_loop:0
-
-#subtract one from the total value.
-#On failure, we're done!
-COPY
-dropfail
-trap
-DECR
-dropval:0
-
-#subtract one from the loop variable
-#On failure, repeat the drop loop!
-COPY
-droploop
-trap
-DECR
-drop_table_elem:0
-
-GOTO
-drop_inner_loop
-
-dropfail: dropfail
-
-GOTO
-dropretaddr: 0
 
 ########
 # TESTCTRL
