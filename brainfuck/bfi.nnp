@@ -1,4 +1,3 @@
-
 ##########################################
 # Start Section
 ##########################################
@@ -7,6 +6,52 @@ readloop
 ##########################################
 # Trap Section
 ##########################################
+
+##########################################
+# testsign subroutine
+##########################################
+#args
+#testsign_neg
+#testsign_pos
+#testsign_zero
+#testsign_input
+
+testsign: 0
+COPY
+testsign_zero: 0
+trap
+
+DECR
+testsign_input: 0
+
+COPY
+testsign_input
+testsign_local1
+
+testsign_loop: 0
+
+COPY
+testsign_neg: 0
+trap
+DECR
+testsign_local1: 0
+
+COPY
+testsign_local1
+testsign_local2
+
+COPY
+testsign_pos: 0
+trap
+DECR
+testsign_local2: 0
+
+COPY
+testsign_local2
+testsign_local1
+
+GOTO
+testsign_loop
 
 98: GOTO
 trap: 0
@@ -93,7 +138,11 @@ dropaddr
 	# 15 and up => Depends what's floating around memory!
 
 	#setup
-	dropaddr:0
+	{
+		dropaddr:0
+	}
+
+
 	DROP:DROP
 
 	#args
@@ -106,7 +155,15 @@ dropaddr
 	ZERO
 	dropretval
 
-	goto
+	COPY
+	six
+	ctrl_decr
+
+	COPY
+	zero
+	isctrlflag
+
+	GOTO
 	firstdroploop
 
 	droploop:droploop
@@ -123,8 +180,48 @@ dropaddr
 
 	firstdroploop:0
 	#update result value
-	INCR
-	dropretval: 0
+	{
+		INCR
+		dropretval: 0
+
+
+		{ #Control flow traps
+			COPY
+			setup_ctrl
+			trap
+
+
+			#Todo: do something better to prevent
+			#ctrl_decr from firing twice
+			#todo wasteful
+			DECR
+			ctrl_decr:0
+
+			GOTO
+			post_urv
+		}
+
+		{
+			hundred:100
+			setup_ctrl:setup_ctrl
+			#Get the drop value and allocate space for
+			#end address. If we're end, actually generate
+			#the end address
+
+			COPY
+			hundred
+			ctrl_decr
+
+			COPY
+			one
+			isctrlflag
+
+		}
+
+
+		post_urv:post_urv
+
+	}
 
 	#Compute the table element.
 	#We'll decrement the value this number of times.
@@ -137,29 +234,31 @@ dropaddr
 
 	#output table element for debugging
 
-	drop_inner_loop:0
+	{ #drop inner loop
+		drop_inner_loop:0
 
-	#subtract one from the total value.
-	#On failure, we're done!
-	COPY
-	dropfail
-	trap
-	DECR
-	dropval:0
+		#subtract one from the total value.
+		#On failure, we're done!
+		COPY
+		dropfail
+		trap
+		DECR
+		dropval:0
 
-	#subtract one from the loop variable
-	#On failure, repeat the drop loop!
-	COPY
-	droploop
-	trap
-	DECR
-	drop_table_elem:0
+		#subtract one from the loop variable
+		#On failure, repeat the drop loop!
+		COPY
+		droploop
+		trap
+		DECR
+		drop_table_elem:0
 
-	GOTO
-	drop_inner_loop
-
-	dropfail: dropfail
+		GOTO
+		drop_inner_loop
+	}
 }
+
+dropfail: dropfail
 
 #Copy the value into our instruction list.
 COPY
@@ -168,6 +267,50 @@ iptr_indirect
 COPY
 dropretval
 iptr_indirect: 0
+
+{ #Make space for startloop/endloop
+	COPY
+	end_ctrl_check
+	trap
+
+	DECR
+	isctrlflag:0
+
+	{
+		COPY
+		iptr
+		iptr_incr10
+
+		INCR
+		iptr_incr10:0
+
+		COPY
+		iptr_incr10
+		iptr
+
+		COPY
+		iptr
+		iptr_deref44
+
+		COPY
+		invalid_address
+		iptr_deref44:0
+	}
+
+	COPY
+	instr_count
+	instr_count_update
+	INCR
+	instr_count_update:0
+	COPY
+	instr_count_update
+	instr_count
+
+	end_ctrl_check:end_ctrl_check
+}
+
+postdropfail:postdropfail
+
 
 ###
 # end of loop bookkeeping
@@ -235,22 +378,189 @@ iptr
 ##########################################
 # Interpreter setup
 ##########################################
+{
+	#constant!
+	instr_start_address: instr_start
 
-COPY
-iptr
-data_start_address
+	COPY
+	iptr
+	dataptr
 
-COPY
-data_start_address
-dataptr
+	COPY
+	instr_start_address
+	iptr
+	
+}
 
-instr_start_address: instr_start
-COPY
-instr_start_address
-iptr
+#GOTO
+#clean_startloops_done
+{
+	#Change [ to instruction pointer
+	#address of where they should jump to.
 
-#OUTPD
-#1141411
+	#Iterate through instructions, testing each for inclusion
+
+	COPY
+	clean_startloops_done
+	trap
+
+	COPY
+	instr_start_address
+	iptr_increr
+
+	#TODO: is this right or am I still off by one?
+	COPY
+	instr_count
+	instr_count_decr
+
+	clean_startloops_loop:clean_startloops_loop
+
+	COPY
+	clean_startloops_done
+	trap
+
+	DECR
+	instr_count_decr:0
+
+	COPY
+	iptr_increr
+	item_address
+
+	INCR
+	iptr_increr:0
+
+	{ #Setup call to testctrl to see if we're a [
+		COPY
+		setup_startloop
+		testctrl_start
+
+		COPY
+		clean_startloops_loop
+		testctrl_end
+	
+		COPY
+		clean_startloops_loop
+		testctrl_nonctrl
+	}
+
+	GOTO
+	testctrl
+
+	{ #setup_startloop subroutine
+		setup_startloop:setup_startloop
+
+		{ #Setup
+
+			COPY
+			iptr_incr
+			iptr_fun
+
+			#COPY
+			#iptr
+			#iptr_bkup
+
+			COPY
+			zero
+			loopcount
+
+			{ #Todo off by one?
+				COPY
+				item_address
+				iptr_preincr
+
+				INCR
+				iptr_preincr:0
+
+				COPY
+				iptr_preincr
+				iptr
+			}
+
+			{ #testctrl setup for jumpfwd!
+				COPY
+				jumpfwd_isstart
+				testctrl_start
+			
+				COPY
+				jumpfwd_isend
+				testctrl_end
+			}
+
+			COPY
+			sstart_finish
+			jumpfwd_ret
+		}
+
+		COPY
+		iptr
+		iptr_old_val
+
+		GOTO
+		jumpfwd
+		sstart_finish:sstart_finish
+
+		{ #Update invalid addresses
+
+			loop_endpoint:0
+			iptr_old_val:0
+
+			#Save the final address
+			COPY
+			iptr
+			loop_endpoint
+
+			#Restore the old value
+			COPY
+			iptr_old_val
+			iptr
+
+			#Store the end loop index after
+			#the start loop
+			{
+				COPY
+				iptr
+				iptr_deref92
+				COPY
+				loop_endpoint
+				iptr_deref92:0
+			}
+
+			#Store the start loop index
+			#after the end loop
+			{
+				COPY
+				loop_endpoint
+				post_loop_endpoint
+				INCR
+				post_loop_endpoint:0
+				COPY
+				post_loop_endpoint
+				post_loop_endpoint_deref
+				COPY
+				iptr
+				post_loop_endpoint_deref:0
+			}
+		}
+
+		GOTO
+		clean_startloops_loop
+	}
+
+	clean_startloops_done:clean_startloops_done
+}
+
+##########################################
+# Interpreter reset
+##########################################
+{
+	COPY
+	instr_start_address
+	iptr
+}
+
+GOTO
+instr
+
 
 ##########################################
 # Interpreter section
@@ -259,7 +569,7 @@ iptr
 #Iterate over possible instructions
 
 instr:0
-interpreterloop: 0
+
 
 { #Call to testitem which implements the tokenizer
 	#EOF = 0 (end)
@@ -311,6 +621,12 @@ interpreterloop: 0
 	COPY
 	bf_loop_end
 	loop_end
+
+	COPY
+	post_nonloop_instr
+	testitem_addr
+
+	interpreterloop: 0
 
 	COPY
 	iptr
@@ -592,62 +908,52 @@ post_nonloop_instr
 #######
 # bf_loop_start
 #######
+{
+	bf_loop_start: bf_loop_start
+	#OUTPD
+	#7777
 
-bf_loop_start: bf_loop_start
-#OUTPD
-#7777
+	{ #Setup
 
-{ #setup
-	COPY
-	zero
-	loopcount
-
-	COPY
-	iptr_incr
-	iptr_fun
-
-	{ #testctrl setup for jumpfwd!
 		COPY
-		jumpfwd_isstart
-		testctrl_start
-	
-		COPY
-		jumpfwd_isend
-		testctrl_end
+		post_nonloop_instr
+		runtime_jump_ret
 	}
-}
-
-COPY
-bf_loopstart_rest
-postsetdata
-GOTO
-setdata
-bf_loopstart_rest:bf_loopstart_rest
-
-{ #testsign call
-#If nonpositive, jumpfwd
-#Otherwise no-op!
 
 	COPY
-	data
-	testsign_input
-	COPY 
-	post_nonloop_instr
-	testsign_pos
-	COPY
-	jumpfwd 
-	testsign_zero
-	COPY
-	jumpfwd
-	testsign_neg
-
+	bf_loopstart_rest
+	postsetdata
 	GOTO
-	testsign
+	setdata
+	bf_loopstart_rest:bf_loopstart_rest
+
+	{ #testsign call
+	#If nonpositive, runtime jumpfwd
+	#Otherwise no-op!
+
+		COPY
+		data
+		testsign_input
+		COPY 
+		post_nonloop_instr
+		testsign_pos
+		COPY
+		runtime_jump 
+		testsign_zero
+		COPY
+		runtime_jump
+		testsign_neg
+
+		GOTO
+		testsign
+	}
+
+	#no path through here, crash!
+	OUTPD
+	9996
+
 }
 
-#no path through here, crash!
-OUTPD
-9996
 
 { #increment instruction pointer
 	iptr_incr:iptr_incr
@@ -681,147 +987,96 @@ OUTPD
 	iptr_decr_jumpfwd
 	iptr
 
+
 	GOTO
 	iptr_fun_ret
 }
+#######
+# runtime_jump
+#######
+{
 
-{ #Search for ] and go there!
-	jumpfwd: jumpfwd
+	runtime_jump:runtime_jump
 
-	#scan forward in instruction pointer, incrementing for start loop
-	#and decrementing for end loop. Trap on loopcount < 0
+	COPY
+	iptr
+	iptr_rt_incr
+
+	INCR
+	iptr_rt_incr:0
+
+	COPY
+	iptr_rt_incr
+	iptr
+
+	#OUTPD
+	#8080
+
+	COPY
+	iptr
+	iptr_deref_runtime_jump
+
+	COPY
+	iptr_deref_runtime_jump:0
+	iptr
+
+	{ #debug
+#		COPY
+#		iptr
+#		iptr_output_debug
+#
+#		OUTPD
+#		iptr_output_debug:0
+	}
 
 	GOTO
-	iptr_fun:0
-	iptr_fun_ret:0
-
-
-	{ #testctrl call
-		#Some setup happens at the top!
-
-		COPY
-		iptr
-		item_address
-
-		COPY
-		jumpfwd_ignore
-		testctrl_nonctrl
-
-		GOTO
-		testctrl
-	}
-
-	{ #Just increment and ignore this instruction!
-		jumpfwd_ignore: jumpfwd_ignore
-		GOTO
-		jumpfwd
-	}
-
-	{
-		jumpfwd_isstart: jumpfwd_isstart
-
-		COPY
-		loopcount
-		loopcount_incr1
-		INCR
-		loopcount_incr1:0
-		COPY
-		loopcount_incr1
-		loopcount
-
-		GOTO
-		jumpfwd
-	}
-
-	{
-		jumpfwd_isend: jumpfwd_isend
-		COPY
-		loopcount
-		jumpfwd_local_decr
-		COPY
-		jumpfwd_over
-		trap
-
-		DECR
-		jumpfwd_local_decr: 0
-
-		COPY
-		jumpfwd_local_decr
-		loopcount
-
-		GOTO
-		jumpfwd
-	}
-
-	jumpfwd_over:jumpfwd_over
-	#TODO: if no special work is needed on
-	#jumpfwd_over, remove label and replace
-	#with post_nonloop_instr
-
-	#TODO I may be able to save several
-	#copies per interpret for non control
-	#ops by resetting jumpfwds here!
-	GOTO
-	post_nonloop_instr
+	runtime_jump_ret:0
 }
 
 #######
 # bf_loop_end
 #######
-bf_loop_end: bf_loop_end
+{
+	bf_loop_end: bf_loop_end
 
-#OUTPD
-#8888
+#	OUTPD
+#	8888
 
-{ #Setup
-	COPY
-	zero
-	loopcount
+	{ #Setup
 
-	COPY
-	iptr_decr
-	iptr_fun
-
-	{ #testctrl setup for jumpfwd!
 		COPY
-		jumpfwd_isend
-		testctrl_start
-	
+		post_nonloop_instr
+		runtime_jump_ret
+	}
+
+	COPY
+	bf_loopend_rest
+	postsetdata
+	GOTO
+	setdata
+	bf_loopend_rest:bf_loopend_rest
+
+	{ #testsign call
+		#If positive, jumpfwd... backward!
+		#Otherwise no-op!
+
 		COPY
-		jumpfwd_isstart
-		testctrl_end
+		data
+		testsign_input
+		COPY
+		runtime_jump 
+		testsign_pos
+		COPY
+		post_nonloop_instr
+		testsign_zero
+		COPY
+		post_nonloop_instr
+		testsign_neg
+
+		GOTO
+		testsign
 	}
 }
-
-COPY
-bf_loopend_rest
-postsetdata
-GOTO
-setdata
-bf_loopend_rest:bf_loopend_rest
-
-{ #testsign call
-	#If positive, jumpfwd... backward!
-	#Otherwise no-op!
-	#Todo: edit jumpfwd to paramterize on [ vs ] incr and decr
-
-	COPY
-	data
-	testsign_input
-	COPY
-	jumpfwd 
-	testsign_pos
-	COPY
-	post_nonloop_instr
-	testsign_zero
-	COPY
-	post_nonloop_instr
-	testsign_neg
-
-	GOTO
-	testsign
-}
-
 
 #######
 # bf_input
@@ -940,51 +1195,6 @@ deinterlace_output:0
 GOTO
 post_nonloop_instr
 
-##########################################
-# testsign subroutine
-##########################################
-#args
-#testsign_neg
-#testsign_pos
-#testsign_zero
-#testsign_input
-
-testsign: 0
-COPY 
-testsign_zero: 0
-trap
-
-DECR
-testsign_input: 0
-
-COPY
-testsign_input
-testsign_local1
-
-testsign_loop: 0
-
-COPY
-testsign_neg: 0
-trap
-DECR
-testsign_local1: 0
-
-COPY
-testsign_local1
-testsign_local2
-
-COPY
-testsign_pos: 0
-trap
-DECR
-testsign_local2: 0
-
-COPY
-testsign_local2
-testsign_local1
-
-GOTO
-testsign_loop
 
 ##########################################
 # Deinterlace subroutine
@@ -1091,6 +1301,9 @@ post_deinterlace:post_deinterlace
 		COPY
 		testctrl_nonctrl
 		move_right
+		COPY
+		testctrl_nonctrl
+		testitem_addr
 
 		COPY
 		testctrl_start
@@ -1107,6 +1320,95 @@ post_deinterlace:post_deinterlace
 	#Should never get here.
 	OUTPD
 	9998
+}
+
+
+#####
+# jumpfwd
+#####
+{ #Search for ] and go there!
+	jumpfwd:jumpfwd
+
+	#scan forward in instruction pointer, incrementing for start loop
+	#and decrementing for end loop. Trap on loopcount < 0
+
+	GOTO
+	iptr_fun:0
+	iptr_fun_ret:0
+
+	{ #testctrl call
+		#Some setup happens at the top!
+
+		COPY
+		iptr
+		item_address
+
+		COPY
+		jumpfwd_ignore
+		testctrl_nonctrl
+
+		GOTO
+		testctrl
+	}
+
+	{ #Just increment and ignore this instruction!
+		jumpfwd_ignore: jumpfwd_ignore
+
+
+
+		GOTO
+		jumpfwd
+	}
+
+	{
+		jumpfwd_isstart: jumpfwd_isstart
+
+		COPY
+		loopcount
+		loopcount_incr1
+		INCR
+		loopcount_incr1:0
+		COPY
+		loopcount_incr1
+		loopcount
+
+		GOTO
+		jumpfwd
+	}
+
+	{
+		jumpfwd_isend: jumpfwd_isend
+
+		COPY
+		loopcount
+		jumpfwd_local_decr
+		COPY
+		jumpfwd_over
+		trap
+
+		DECR
+		jumpfwd_local_decr: 0
+
+		COPY
+		jumpfwd_local_decr
+		loopcount
+
+		GOTO
+		jumpfwd
+	}
+
+	jumpfwd_over:jumpfwd_over
+
+
+	#TODO: if no special work is needed on
+	#jumpfwd_over, remove label and replace
+	#with post_nonloop_instr
+
+	#TODO I may be able to save several
+	#copies per interpret for non control
+	#ops by resetting jumpfwds here!
+	GOTO
+	jumpfwd_ret:0
 }
 
 #######
@@ -1143,11 +1445,21 @@ post_deinterlace:post_deinterlace
 	chkend
 
 	{ #debug
+
+#		COPY
+#		item_address
+#		print_addr
+#
+#		OUTPD
+#		print_addr:0
+#
 #		COPY
 #		chkend
 #		debug_instr_strt
 #		OUTPD
 #		debug_instr_strt:0
+	#
+
 	}
 
 	#Check for 0
@@ -1230,13 +1542,15 @@ post_deinterlace:post_deinterlace
 	DECR
 	chkrloop: 0
 
-	OUTPD
-	9999
+	#OUTPD
+	#9999
+
+	GOTO
+	testitem_addr:0
 
 	#TODO: should never reach here.
 	#Crash?
 }
-
 
 finale: finale
 ##########################################
@@ -1247,10 +1561,13 @@ finale: finale
 ###
 # Constants
 ###
-ZERO: 0
-ONE: 1
-STARTLOOP: 7
-ENDLOOP: 8
+zero: 0
+one: 1
+six: 6
+seven: 7
+startloop: 7
+endloop: 8
+invalid_address:111
 
 ###
 # Global scalars
@@ -1258,7 +1575,6 @@ ENDLOOP: 8
 dataptr: 0
 iptr: instr_start
 loopcount: 0 # natural number
-data_start_address: 0
 
 ###
 # Global vectors
@@ -1270,7 +1586,7 @@ data_start_address: 0
 #  addr % 2 == 1 -> instructions (ascii code)
 
 
-9099: 0
+preinstr: 0
 instr_start: 0
 
 

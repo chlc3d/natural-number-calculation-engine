@@ -22,6 +22,12 @@ class State:
 			"number": 0
 		}
 
+		self.executeds = {}
+
+	def mark_line_executed(self):
+		self.executeds[self.pc] = self.executeds.get(self.pc, 0) + 1
+
+
 	def num_instructions_executed(self):
 		sm = 0
 		for name,count in self.executed_instructions.items():
@@ -110,6 +116,7 @@ def _output(state):
 def _debug_output(state):
 	state.next()
 	state.output += "%s: %s\n" % (state.pc, state.get())
+	print "%s: %s\n" % (state.pc, state.get())
 
 def interpret(debug, program_path, input_files):
 
@@ -162,6 +169,7 @@ def interpret(debug, program_path, input_files):
 
 		instr = instr.lower()
 
+		state.mark_line_executed()
 		state.executed_instructions[instr] += 1
 		{
 			"incr": _incr,
@@ -179,10 +187,11 @@ def interpret(debug, program_path, input_files):
 	return state
 
 if __name__ == '__main__':
-	state = interpret(False, sys.argv[1], sys.argv[2:])
+	state = interpret(True, sys.argv[1], sys.argv[2:])
 	print state.output
 
 	print ""
 	print state.executed_instructions
 	print "head moves: %s" % state.head_moves
 	print "final pc: %s" % state.pc
+	print "hot lines: %s" % sorted(state.executeds.items(), key=lambda x:x[1], reverse=True)[:50]
