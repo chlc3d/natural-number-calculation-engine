@@ -1,0 +1,43 @@
+Tokenize and split into functions
+	done
+Parse function bodies into TrueTokens
+	Normal lines become literals
+	BEFORE = has_before
+	BEGIN = iterator into TrueTokens
+	Call becomes CallObject
+
+BlockTable now describes LOGICAL functions
+
+
+CallStrategy is generated from Blocktable
+
+
+Synthesize takes call strategy and block table
+
+
+	Places all non-inline functions in order
+		Just write out literals
+		On encounter a call, check if it's inline
+			Yes:
+				Place that function here with appropriate intro/outro logic and templating
+				If the function is marked volatile, ask CallStrategy when the label for volatile calls
+				should be placed?
+					Or just do it on the first one?
+			No:
+				Place call to that function
+		On encounter a constant, check if it's inline
+			Yes:
+				Just put that constant here
+			No:
+				just treat it like a normal literal
+
+	Ask call strategy where to put noninline constants
+	Ask call strategy where to put globals
+	Insert finale
+
+	TODO: handle address 98?
+
+
+	Output = TEXT for asm parser.
+
+

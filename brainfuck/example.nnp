@@ -1,0 +1,1505 @@
+constants 
+ { 
+ instr_start_address : instr_start 
+ zero : 0 
+ one : 1 
+ six : 6 
+ seven : 7 
+ startloop : 7 
+ endloop : 8 
+ invalid_address : 111 
+ } 
+ 
+ globals 
+ { 
+ dataptr : 0 
+ iptr : instr_start 
+ loopcount : 0 
+ } 
+ 
+ epilogue 
+ { 
+ preinstr : 0 
+ instr_start : 0 
+ } 
+ 
+ function main 
+ { 
+ CALL readloop ( ) 
+ CALL endread ( ) 
+ CALL setup_interpret ( ) 
+ CALL clean_startloops ( ) 
+ CALL reset_instruction_pointer ( ) 
+ CALL run_interpreter ( ) 
+ CALL finale ( ) 
+ } 
+ 
+ function testsign ( testsign_neg , testsign_pos , testsign_zero , testsign_input ) 
+ { 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ testsign_zero : 0 
+ trap 
+ 
+ DECR 
+ testsign_input : 0 
+ 
+ COPY 
+ testsign_input 
+ testsign_local 1 
+ 
+ testsign_loop : 0 
+ 
+ COPY 
+ testsign_neg : 0 
+ trap 
+ DECR 
+ testsign_local 1 : 0 
+ 
+ COPY 
+ testsign_local 1 
+ testsign_local 2 
+ 
+ COPY 
+ testsign_pos : 0 
+ trap 
+ DECR 
+ testsign_local 2 : 0 
+ 
+ COPY 
+ testsign_local 2 
+ testsign_local 1 
+ 
+ GOTO 
+ testsign_loop 
+ } 
+ 
+ function readloop ( ) 
+ { 
+ 
+ 
+ 
+ 
+ INPT 
+ inp : 0 
+ 
+ copy 
+ endread 
+ trap 
+ 
+ COPY 
+ inp 
+ nulltest 
+ 
+ DECR 
+ nulltest : 0 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ table_start : table 
+ table : 43 
+ 0 
+ 0 
+ 0 
+ 13 
+ 1 
+ 28 
+ 1 
+ 
+ COPY 
+ inp 
+ dropval 
+ 
+ COPY 
+ table_start 
+ dropaddr 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ dropaddr : 0 
+ 
+ DROP : DROP 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ ZERO 
+ dropretval 
+ 
+ COPY 
+ six 
+ ctrl_decr 
+ 
+ COPY 
+ zero 
+ isctrlflag 
+ 
+ GOTO 
+ firstdroploop 
+ 
+ droploop : droploop 
+ 
+ 
+ COPY 
+ dropaddr 
+ da_incr 
+ INCR 
+ da_incr : 0 
+ COPY 
+ da_incr 
+ dropaddr 
+ 
+ firstdroploop : 0 
+ 
+ INCR 
+ dropretval : 0 
+ 
+ 
+ 
+ COPY 
+ setup_ctrl 
+ trap 
+ 
+ 
+ 
+ 
+ 
+ DECR 
+ ctrl_decr : 0 
+ 
+ GOTO 
+ post_urv 
+ 
+ hundred : 100 
+ setup_ctrl : setup_ctrl 
+ 
+ 
+ 
+ 
+ COPY 
+ hundred 
+ ctrl_decr 
+ 
+ COPY 
+ one 
+ isctrlflag 
+ 
+ post_urv : post_urv 
+ 
+ 
+ 
+ 
+ COPY 
+ dropaddr 
+ dropaddr_indirect 
+ COPY 
+ dropaddr_indirect : 0 
+ drop_table_elem 
+ 
+ 
+ drop_inner_loop : 0 
+ 
+ 
+ 
+ COPY 
+ dropfail 
+ trap 
+ DECR 
+ dropval : 0 
+ 
+ 
+ 
+ COPY 
+ droploop 
+ trap 
+ DECR 
+ drop_table_elem : 0 
+ 
+ GOTO 
+ drop_inner_loop 
+ 
+ dropfail : dropfail 
+ 
+ 
+ COPY 
+ iptr 
+ iptr_indirect 
+ COPY 
+ dropretval 
+ iptr_indirect : 0 
+ 
+ 
+ COPY 
+ end_ctrl_check 
+ trap 
+ 
+ DECR 
+ isctrlflag : 0 
+ 
+ 
+ COPY 
+ iptr 
+ iptr_incr 10 
+ 
+ INCR 
+ iptr_incr 10 : 0 
+ 
+ COPY 
+ iptr_incr 10 
+ iptr 
+ 
+ COPY 
+ iptr 
+ iptr_deref 44 
+ 
+ COPY 
+ invalid_address 
+ iptr_deref 44 : 0 
+ 
+ 
+ COPY 
+ instr_count 
+ instr_count_update 
+ INCR 
+ instr_count_update : 0 
+ COPY 
+ instr_count_update 
+ instr_count 
+ 
+ end_ctrl_check : end_ctrl_check 
+ 
+ 
+ postdropfail : postdropfail 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ iptr 
+ eol_incr 1 
+ 
+ INCR 
+ eol_incr 1 : 0 
+ 
+ COPY 
+ eol_incr 1 
+ iptr 
+ 
+ INCR 
+ instr_count : 0 
+ 
+ GOTO 
+ readloop 
+ } 
+ 
+ function endread ( ) 
+ { 
+ 
+ 
+ 
+ 
+ COPY 
+ iptr 
+ iptr_indr 
+ 
+ COPY 
+ ZERO 
+ iptr_indr : 0 
+ 
+ COPY 
+ iptr 
+ eor_incr 1 
+ 
+ INCR 
+ eor_incr 1 : 0 
+ 
+ COPY 
+ eor_incr 1 
+ iptr 
+ } 
+ 
+ function setup_interpret ( ) 
+ { 
+ 
+ COPY 
+ iptr 
+ dataptr 
+ 
+ COPY 
+ instr_start_address 
+ iptr 
+ 
+ } 
+ 
+ function clean_startloops ( ) 
+ { 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ clean_startloops_done 
+ trap 
+ 
+ COPY 
+ instr_start_address 
+ iptr_increr 
+ 
+ 
+ COPY 
+ instr_count 
+ instr_count_decr 
+ 
+ clean_startloops_loop : clean_startloops_loop 
+ 
+ COPY 
+ clean_startloops_done 
+ trap 
+ 
+ DECR 
+ instr_count_decr : 0 
+ 
+ COPY 
+ iptr_increr 
+ item_address 
+ 
+ INCR 
+ iptr_increr : 0 
+ 
+ 
+ COPY 
+ setup_startloop 
+ testctrl_start 
+ 
+ COPY 
+ clean_startloops_loop 
+ testctrl_end 
+ 
+ COPY 
+ clean_startloops_loop 
+ testctrl_nonctrl 
+ 
+ 
+ GOTO 
+ testctrl 
+ 
+ 
+ setup_startloop : setup_startloop 
+ 
+ 
+ 
+ COPY 
+ iptr_incr 
+ iptr_fun 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ zero 
+ loopcount 
+ 
+ 
+ COPY 
+ item_address 
+ iptr_preincr 
+ 
+ INCR 
+ iptr_preincr : 0 
+ 
+ COPY 
+ iptr_preincr 
+ iptr 
+ 
+ 
+ 
+ COPY 
+ jumpfwd_isstart 
+ testctrl_start 
+ 
+ COPY 
+ jumpfwd_isend 
+ testctrl_end 
+ 
+ 
+ COPY 
+ sstart_finish 
+ jumpfwd_ret 
+ 
+ 
+ COPY 
+ iptr 
+ iptr_old_val 
+ 
+ GOTO 
+ jumpfwd 
+ sstart_finish : sstart_finish 
+ 
+ 
+ 
+ loop_endpoint : 0 
+ iptr_old_val : 0 
+ 
+ 
+ COPY 
+ iptr 
+ loop_endpoint 
+ 
+ 
+ COPY 
+ iptr_old_val 
+ iptr 
+ 
+ 
+ 
+ 
+ COPY 
+ iptr 
+ iptr_deref 92 
+ COPY 
+ loop_endpoint 
+ iptr_deref 92 : 0 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ loop_endpoint 
+ post_loop_endpoint 
+ INCR 
+ post_loop_endpoint : 0 
+ COPY 
+ post_loop_endpoint 
+ post_loop_endpoint_deref 
+ COPY 
+ iptr 
+ post_loop_endpoint_deref : 0 
+ 
+ 
+ 
+ GOTO 
+ clean_startloops_loop 
+ 
+ 
+ clean_startloops_done : clean_startloops_done 
+ } 
+ 
+ function reset_instruction_pointer ( ) 
+ { 
+ 
+ 
+ 
+ 
+ COPY 
+ instr_start_address 
+ iptr 
+ } 
+ 
+ function run_interpreter ( ) 
+ { 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ endinterpret 
+ eof 
+ 
+ COPY 
+ bf_incr 
+ plus 
+ 
+ COPY 
+ bf_input 
+ comma 
+ 
+ COPY 
+ bf_decr 
+ minus 
+ 
+ COPY 
+ bf_output 
+ dot 
+ 
+ COPY 
+ bf_move_left 
+ move_left 
+ 
+ COPY 
+ bf_move_right 
+ move_right 
+ 
+ COPY 
+ bf_loop_start 
+ loop_start 
+ 
+ COPY 
+ bf_loop_end 
+ loop_end 
+ 
+ COPY 
+ post_nonloop_instr 
+ testitem_addr 
+ 
+ interpreterloop : 0 
+ 
+ COPY 
+ iptr 
+ item_address 
+ 
+ GOTO 
+ testitem 
+ 
+ 
+ post_nonloop_instr : post_nonloop_instr 
+ 
+ COPY 
+ iptr 
+ incrme 
+ 
+ INCR 
+ incrme : 0 
+ 
+ COPY 
+ incrme 
+ iptr 
+ 
+ GOTO 
+ interpreterloop 
+ 
+ endinterpret : endinterpret 
+ } 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ function setdata ( ) 
+ { 
+ BEFORE 
+ data : 0 
+ 
+ BEGIN 
+ COPY 
+ dataptr 
+ dataptr_ptr 
+ COPY 
+ dataptr_ptr : 0 
+ data 
+ GOTO 
+ postsetdata : 0 
+ } 
+ 
+ 
+ 
+ 
+ 
+ function bf_incr ( ) 
+ { 
+ bf_incr : bf_incr 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ bf_incr_rest 
+ postsetdata 
+ GOTO 
+ setdata 
+ 
+ 
+ bf_incr_rest : bf_incr_rest 
+ 
+ { 
+ 
+ COPY 
+ data 
+ testsign_input 
+ COPY 
+ pos_path 
+ testsign_pos 
+ COPY 
+ pos_path 
+ testsign_zero 
+ COPY 
+ neg_path_careful 
+ testsign_neg 
+ 
+ GOTO 
+ testsign 
+ } 
+ 
+ pos_path : pos_path 
+ 
+ 
+ 
+ COPY 
+ data 
+ bfincr_ 1 
+ INCR 
+ bfincr_ 1 : 0 
+ COPY 
+ bfincr_ 1 
+ bfincr_ 2 
+ INCR 
+ bfincr_ 2 : 0 
+ COPY 
+ bfincr_ 2 
+ data 
+ 
+ { 
+ COPY 
+ dataptr 
+ dataptr_bfincr_deref 
+ 
+ COPY 
+ data 
+ dataptr_bfincr_deref : 0 
+ } 
+ 
+ GOTO 
+ post_nonloop_instr 
+ 
+ neg_path_careful : neg_path_careful 
+ 
+ 
+ 
+ 
+ COPY 
+ after_decrs 
+ trap 
+ 
+ COPY 
+ data 
+ bfdecr_ 1 
+ DECR 
+ bfdecr_ 1 : 0 
+ 
+ COPY 
+ bfdecr_ 1 
+ data 
+ COPY 
+ bfdecr_ 1 
+ bfdecr_ 2 
+ 
+ DECR 
+ bfdecr_ 2 : 0 
+ COPY 
+ bfdecr_ 2 
+ data 
+ 
+ after_decrs : after_decrs 
+ { 
+ COPY 
+ dataptr 
+ dataptr_bfincr_deref 2 
+ 
+ COPY 
+ data 
+ dataptr_bfincr_deref 2 : 0 
+ } 
+ 
+ GOTO 
+ post_nonloop_instr 
+ } 
+ 
+ 
+ 
+ 
+ 
+ function bf_decr ( ) 
+ { 
+ COPY 
+ bf_decr_rest 
+ postsetdata 
+ GOTO 
+ setdata 
+ bf_decr_rest : bf_decr_rest 
+ 
+ COPY 
+ data 
+ testsign_input 
+ COPY 
+ neg_path_careful 
+ testsign_pos 
+ COPY 
+ decr_zero 
+ testsign_zero 
+ COPY 
+ pos_path 
+ testsign_neg 
+ 
+ GOTO 
+ testsign 
+ 
+ decr_zero : decr_zero 
+ 
+ 
+ 
+ { 
+ COPY 
+ dataptr 
+ dataptr_bfincr_deref 3 
+ 
+ COPY 
+ ONE 
+ dataptr_bfincr_deref 3 : 0 
+ } 
+ 
+ COPY 
+ ONE 
+ dataptr_ptr 
+ GOTO 
+ post_nonloop_instr 
+ } 
+ 
+ 
+ function bf_move_right 
+ { 
+ 
+ 
+ 
+ 
+ { 
+ 
+ 
+ 
+ COPY 
+ dataptr 
+ dataptr_mr_local 1 
+ INCR 
+ dataptr_mr_local 1 : 0 
+ 
+ COPY 
+ dataptr_mr_local 1 
+ dataptr_mr_local 2 
+ INCR 
+ dataptr_mr_local 2 : 0 
+ 
+ COPY 
+ dataptr_mr_local 2 
+ dataptr 
+ GOTO 
+ post_nonloop_instr 
+ } 
+ 
+ function bf_move_left 
+ { 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ dataptr 
+ dataptr_ml_local 1 
+ DECR 
+ dataptr_ml_local 1 : 0 
+ 
+ COPY 
+ dataptr_ml_local 1 
+ dataptr_ml_local 2 
+ DECR 
+ dataptr_ml_local 2 : 0 
+ 
+ COPY 
+ dataptr_ml_local 2 
+ dataptr 
+ GOTO 
+ post_nonloop_instr 
+ } 
+ 
+ function bf_loop_start ( ) 
+ { 
+ 
+ 
+ 
+ 
+ 
+ 
+ { 
+ 
+ COPY 
+ post_nonloop_instr 
+ runtime_jump_ret 
+ } 
+ 
+ COPY 
+ bf_loopstart_rest 
+ postsetdata 
+ GOTO 
+ setdata 
+ bf_loopstart_rest : bf_loopstart_rest 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ data 
+ testsign_input 
+ COPY 
+ post_nonloop_instr 
+ testsign_pos 
+ COPY 
+ runtime_jump 
+ testsign_zero 
+ COPY 
+ runtime_jump 
+ testsign_neg 
+ 
+ GOTO 
+ testsign 
+ 
+ 
+ OUTPD 
+ 9996 
+ } 
+ 
+ 
+ function iptr_incr ( ) 
+ { 
+ 
+ 
+ COPY 
+ iptr 
+ iptr_incr_jumpfwd 
+ 
+ INCR 
+ iptr_incr_jumpfwd : 0 
+ 
+ COPY 
+ iptr_incr_jumpfwd 
+ iptr 
+ 
+ GOTO 
+ iptr_fun_ret 
+ } 
+ 
+ function iptr_decr ( iptr_fun_ret ) 
+ { 
+ 
+ COPY 
+ iptr 
+ iptr_decr_jumpfwd 
+ 
+ DECR 
+ iptr_decr_jumpfwd : 0 
+ 
+ COPY 
+ iptr_decr_jumpfwd 
+ iptr 
+ 
+ GOTO 
+ iptr_fun_ret 
+ } 
+ 
+ function runtime_jump ( runtime_jump_ret ) 
+ { 
+ 
+ COPY 
+ iptr 
+ iptr_rt_incr 
+ 
+ INCR 
+ iptr_rt_incr : 0 
+ 
+ COPY 
+ iptr_rt_incr 
+ iptr 
+ 
+ 
+ 
+ 
+ COPY 
+ iptr 
+ iptr_deref_runtime_jump 
+ 
+ COPY 
+ iptr_deref_runtime_jump : 0 
+ iptr 
+ 
+ GOTO 
+ place runtime_jump_ret 
+ } 
+ 
+ 
+ 
+ function bf_loop_end ( ) 
+ { 
+ 
+ 
+ 
+ 
+ COPY 
+ post_nonloop_instr 
+ runtime_jump_ret 
+ 
+ 
+ COPY 
+ bf_loopend_rest 
+ postsetdata 
+ GOTO 
+ setdata 
+ bf_loopend_rest : bf_loopend_rest 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ data 
+ testsign_input 
+ COPY 
+ runtime_jump 
+ testsign_pos 
+ COPY 
+ post_nonloop_instr 
+ testsign_zero 
+ COPY 
+ post_nonloop_instr 
+ testsign_neg 
+ 
+ GOTO 
+ testsign 
+ 
+ } 
+ 
+ 
+ 
+ 
+ bf_input : bf_input 
+ 
+ INPT 
+ bf_inp_slot : 0 
+ 
+ { 
+ 
+ 
+ 
+ 
+ bf_inp_result : 0 
+ 
+ 
+ 
+ { 
+ COPY 
+ zero 
+ bf_inp_result 
+ 
+ COPY 
+ bf_inp_slot 
+ decr_orig 
+ 
+ COPY 
+ reinterlace_done 
+ trap 
+ 
+ COPY 
+ zero 
+ new_incr 1 
+ } 
+ 
+ { 
+ reinterlace_me : 0 
+ 
+ DECR 
+ decr_orig : 0 
+ 
+ INCR 
+ new_incr 1 : 0 
+ 
+ COPY 
+ new_incr 1 
+ new_incr 2 
+ 
+ INCR 
+ new_incr 2 : 0 
+ 
+ COPY 
+ new_incr 2 
+ bf_inp_result 
+ 
+ COPY 
+ new_incr 2 
+ new_incr 1 
+ 
+ GOTO 
+ reinterlace_me 
+ } 
+ 
+ reinterlace_done : reinterlace_done 
+ 
+ } 
+ 
+ COPY 
+ dataptr 
+ data_deref_spot 
+ 
+ COPY 
+ bf_inp_result 
+ data_deref_spot : 0 
+ 
+ { 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ } 
+ 
+ GOTO 
+ post_nonloop_instr 
+ 
+ 
+ 
+ 
+ bf_output : bf_output 
+ 
+ 
+ 
+ 
+ COPY 
+ deinterlace_data 
+ postsetdata 
+ 
+ COPY 
+ bf_outp_rest 
+ post_deinterlace 
+ 
+ GOTO 
+ setdata 
+ bf_outp_rest : bf_outp_rest 
+ 
+ OUTP 
+ deinterlace_output : 0 
+ 
+ GOTO 
+ post_nonloop_instr 
+ 
+ 
+ 
+ 
+ 
+ deinterlace_data : deinterlace_data 
+ 
+ 
+ 
+ 
+ 
+ 
+ { 
+ COPY 
+ zero 
+ deinterlace_output 
+ 
+ COPY 
+ post_deinterlace 
+ trap 
+ } 
+ 
+ { 
+ COPY 
+ data 
+ deinter_decr 1 
+ 
+ DECR 
+ deinter_decr 1 : 0 
+ } 
+ 
+ 
+ { 
+ deinterlace_loop_start : deinterlace_loop_start 
+ 
+ { 
+ COPY 
+ deinterlace_output 
+ output_incr 
+ 
+ INCR 
+ output_incr : 0 
+ 
+ COPY 
+ output_incr 
+ deinterlace_output 
+ } 
+ 
+ { 
+ COPY 
+ deinter_decr 1 
+ deinter_decr 2 
+ DECR 
+ deinter_decr 2 : 0 
+ COPY 
+ deinter_decr 2 
+ deinter_decr 3 
+ DECR 
+ deinter_decr 3 : 0 
+ 
+ COPY 
+ deinter_decr 3 
+ deinter_decr 1 
+ } 
+ 
+ 
+ GOTO 
+ deinterlace_loop_start 
+ } 
+ 
+ 
+ GOTO 
+ post_deinterlace : post_deinterlace 
+ 
+ 
+ 
+ 
+ { 
+ testctrl : testctrl 
+ 
+ 
+ testctrl_start : 0 
+ testctrl_end : 0 
+ testctrl_nonctrl : 0 
+ 
+ { 
+ COPY 
+ testctrl_nonctrl 
+ eof 
+ COPY 
+ testctrl_nonctrl 
+ plus 
+ COPY 
+ testctrl_nonctrl 
+ comma 
+ COPY 
+ testctrl_nonctrl 
+ minus 
+ COPY 
+ testctrl_nonctrl 
+ dot 
+ COPY 
+ testctrl_nonctrl 
+ move_left 
+ COPY 
+ testctrl_nonctrl 
+ move_right 
+ COPY 
+ testctrl_nonctrl 
+ testitem_addr 
+ 
+ COPY 
+ testctrl_start 
+ loop_start 
+ 
+ COPY 
+ testctrl_end 
+ loop_end 
+ 
+ GOTO 
+ testitem 
+ } 
+ 
+ 
+ OUTPD 
+ 9998 
+ } 
+ 
+ 
+ function find_endloop ( ) 
+ { 
+ 
+ 
+ 
+ 
+ GOTO 
+ iptr_fun : 0 
+ iptr_fun_ret : 0 
+ 
+ 
+ 
+ 
+ COPY 
+ iptr 
+ item_address 
+ 
+ COPY 
+ jumpfwd_ignore 
+ testctrl_nonctrl 
+ 
+ GOTO 
+ testctrl 
+ 
+ 
+ 
+ jumpfwd_ignore : jumpfwd_ignore 
+ GOTO 
+ find_endloop 
+ 
+ 
+ jumpfwd_isstart : jumpfwd_isstart 
+ 
+ COPY 
+ loopcount 
+ loopcount_incr 1 
+ INCR 
+ loopcount_incr 1 : 0 
+ COPY 
+ loopcount_incr 1 
+ loopcount 
+ 
+ GOTO 
+ find_endloop 
+ 
+ 
+ jumpfwd_isend : jumpfwd_isend 
+ 
+ COPY 
+ loopcount 
+ jumpfwd_local_decr 
+ COPY 
+ find_over 
+ trap 
+ 
+ DECR 
+ jumpfwd_local_decr : 0 
+ 
+ COPY 
+ jumpfwd_local_decr 
+ loopcount 
+ 
+ GOTO 
+ find_endloop 
+ } 
+ 
+ find_over : find_over 
+ GOTO 
+ jumpfwd_ret : 0 
+ } 
+ 
+ 
+ function testitem ( ) 
+ { 
+ 
+ 
+ BEFORE 
+ eof : 0 
+ plus : 0 
+ comma : 0 
+ minus : 0 
+ dot : 0 
+ move_left : 0 
+ move_right : 0 
+ loop_start : 0 
+ loop_end : 0 
+ 
+ 
+ BEGIN 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ COPY 
+ item_address : 0 
+ chkend 
+ 
+ 
+ 
+ COPY 
+ eof 
+ trap 
+ DECR 
+ chkend : 0 
+ 
+ COPY 
+ plus 
+ trap 
+ COPY 
+ chkend 
+ chkincr 
+ DECR 
+ chkincr : 0 
+ 
+ COPY 
+ comma 
+ trap 
+ COPY 
+ chkincr 
+ chkinpt 
+ DECR 
+ chkinpt : 0 
+ 
+ COPY 
+ minus 
+ trap 
+ COPY 
+ chkinpt 
+ chkdecr 
+ DECR 
+ chkdecr : 0 
+ 
+ COPY 
+ dot 
+ trap 
+ COPY 
+ chkdecr 
+ chkout 
+ DECR 
+ chkout : 0 
+ 
+ COPY 
+ move_left 
+ trap 
+ COPY 
+ chkout 
+ chklmove 
+ DECR 
+ chklmove : 0 
+ 
+ COPY 
+ move_right 
+ trap 
+ COPY 
+ chklmove 
+ chkrmove 
+ DECR 
+ chkrmove : 0 
+ 
+ COPY 
+ loop_start 
+ trap 
+ COPY 
+ chkrmove 
+ chklloop 
+ DECR 
+ chklloop : 0 
+ 
+ COPY 
+ loop_end 
+ trap 
+ COPY 
+ chklloop 
+ chkrloop 
+ DECR 
+ chkrloop : 0 
+ 
+ 
+ 
+ 
+ GOTO 
+ testitem_addr : 0 
+ 
+ 
+ 
+ } 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+None
