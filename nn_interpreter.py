@@ -118,9 +118,12 @@ def _debug_output(state):
 	state.output += "%s: %s\n" % (state.pc, state.get())
 	print "%s: %s\n" % (state.pc, state.get())
 
-def interpret(debug, program_path, input_files):
-
+def interpret_file(debug, program_path, input_files):
 	program = open(program_path).readlines()
+	return interpret(debug, program, input_files)
+
+
+def interpret(debug, program_lines, input_files):
 
 	user_input = ''
 	for f in input_files:
@@ -132,7 +135,7 @@ def interpret(debug, program_path, input_files):
 
 	state = State(memory=dict(), tape=user_input)
 
-	for line in program:
+	for line in program_lines:
 		line = ''.join(line.split())
 		if line == '':
 			continue
@@ -187,7 +190,7 @@ def interpret(debug, program_path, input_files):
 	return state
 
 if __name__ == '__main__':
-	state = interpret(True, sys.argv[1], sys.argv[2:])
+	state = interpret_file(True, sys.argv[1], sys.argv[2:])
 	print state.output
 
 	print ""
