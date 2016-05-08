@@ -53,8 +53,6 @@ class State:
 		self.head_moves += abs(self.pc - pc)
 		self.pc = pc
 
-
-
 #def get(mem, pc):
 	#return mem.get(pc, 0)
 #
@@ -190,11 +188,14 @@ def interpret(debug, program_lines, input_files):
 	return state
 
 if __name__ == '__main__':
-	state = interpret_file(True, sys.argv[1], sys.argv[2:])
-	print state.output
+	debug = False
+	state = interpret_file(debug, sys.argv[1], sys.argv[2:])
 
-	print ""
-	print state.executed_instructions
-	print "head moves: %s" % state.head_moves
-	print "final pc: %s" % state.pc
-	print "hot lines: %s" % sorted(state.executeds.items(), key=lambda x:x[1], reverse=True)[:50]
+	print state.output
+	if debug:
+
+		print ""
+		print state.executed_instructions
+		print "head moves: %s" % state.head_moves
+		print "final pc: %s" % state.pc
+		print "hot lines: %s" % sorted(state.executeds.items(), key=lambda x:x[1], reverse=True)[:50]
