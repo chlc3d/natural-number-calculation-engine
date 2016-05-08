@@ -1,6 +1,7 @@
 # Natural Number Calculation Engine (NNCE)
 
 NNCE is a tape-based esoteric programming language. It has two data types, natural numbers and commands.
+This repository contains an [interpreter](nn_interpreter/README.md), a [compiler for a meta-language with additional usability features](nnp_compiler/README.md), and a variety of [examples](examples/README.md).
 
 ## Concepts
 
