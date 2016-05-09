@@ -61,7 +61,7 @@ trap: 0
 ##########################################
 # Program input section
 ##########################################
-readloop: INPT
+readloop: READ
 inp: 0
 
 copy
@@ -77,7 +77,7 @@ nulltest
 #	inp
 #	deb_inpt
 #
-#	OUTPD
+#	WRITD
 #	deb_inpt:0
 }
 
@@ -334,9 +334,9 @@ eol_incr1
 #	iptr
 #	debug_ptr
 #
-#	OUTPD
+#	WRITD
 #	debug_ptr:0
-#	OUTPD
+#	WRITD
 #	debug_result:0
 }
 
@@ -695,7 +695,7 @@ postsetdata: 0
 #######
 bf_incr: bf_incr
 
-#OUTPD
+#WRITD
 #1111
 
 #Set jump point and call setdata
@@ -728,7 +728,7 @@ bf_incr_rest:bf_incr_rest
 }
 
 pos_path: pos_path
-#OUTPD
+#WRITD
 #11112
 
 COPY
@@ -759,7 +759,7 @@ GOTO
 post_nonloop_instr
 
 neg_path_careful : neg_path_careful
-#OUTPD
+#WRITD
 #11113
 
 #Decr once if we're one, twice otherwise
@@ -806,7 +806,7 @@ post_nonloop_instr
 
 bf_decr: bf_decr
 
-#OUTPD
+#WRITD
 #3333
 
 COPY
@@ -858,7 +858,7 @@ post_nonloop_instr
 #######
 bf_move_right: bf_move_right
 
-#OUTPD
+#WRITD
 #6666
 
 COPY
@@ -885,7 +885,7 @@ post_nonloop_instr
 #######
 bf_move_left: bf_move_left
 
-#OUTPD
+#WRITD
 #5555
 
 COPY
@@ -912,7 +912,7 @@ post_nonloop_instr
 #######
 {
 	bf_loop_start: bf_loop_start
-	#OUTPD
+	#WRITD
 	#7777
 
 	{ #Setup
@@ -951,7 +951,7 @@ post_nonloop_instr
 	}
 
 	#no path through here, crash!
-	OUTPD
+	WRITD
 	9996
 
 }
@@ -1011,7 +1011,7 @@ post_nonloop_instr
 	iptr_rt_incr
 	iptr
 
-	#OUTPD
+	#WRITD
 	#8080
 
 	COPY
@@ -1027,7 +1027,7 @@ post_nonloop_instr
 #		iptr
 #		iptr_output_debug
 #
-#		OUTPD
+#		WRITD
 #		iptr_output_debug:0
 	}
 
@@ -1041,7 +1041,7 @@ post_nonloop_instr
 {
 	bf_loop_end: bf_loop_end
 
-#	OUTPD
+#	WRITD
 #	8888
 
 	{ #Setup
@@ -1085,7 +1085,7 @@ post_nonloop_instr
 #######
 bf_input: bf_input
 
-INPT
+READ
 bf_inp_slot: 0
 
 { #reinterlace data:
@@ -1164,7 +1164,7 @@ data_deref_spot:0
 #	mmmm: 0
 #	input_deb
 
-#	OUTPD
+#	WRITD
 #	input_deb:0
 }
 
@@ -1176,7 +1176,7 @@ post_nonloop_instr
 #######
 bf_output: bf_output
 
-#OUTPD
+#WRITD
 #4444
 
 COPY
@@ -1191,7 +1191,7 @@ GOTO
 setdata
 bf_outp_rest:bf_outp_rest
 
-OUTP
+WRIT
 deinterlace_output:0
 
 GOTO
@@ -1320,7 +1320,7 @@ post_deinterlace:post_deinterlace
 	}
 
 	#Should never get here.
-	OUTPD
+	WRITD
 	9998
 }
 
@@ -1452,13 +1452,13 @@ post_deinterlace:post_deinterlace
 #		item_address
 #		print_addr
 #
-#		OUTPD
+#		WRITD
 #		print_addr:0
 #
 #		COPY
 #		chkend
 #		debug_instr_strt
-#		OUTPD
+#		WRITD
 #		debug_instr_strt:0
 	#
 
@@ -1544,7 +1544,7 @@ post_deinterlace:post_deinterlace
 	DECR
 	chkrloop: 0
 
-	#OUTPD
+	#WRITD
 	#9999
 
 	GOTO

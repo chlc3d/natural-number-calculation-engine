@@ -46,7 +46,7 @@ def compile(program_lines):
 
 		segs = [name_to_loc.get(s.lower(), s) for s in segs]
 		for seg in segs:
-			assert seg.isdigit() or seg.lower() in ['', 'outpd', 'incr', 'decr', 'copy', 'inpt', 'outp', 'goto'], "unknown segment %s on line %i" % (seg, idx)
+			assert seg.isdigit() or seg.lower() in ['', 'writd', 'incr', 'decr', 'copy', 'read', 'writ', 'goto'], "unknown segment %s on line %i" % (seg, idx)
 		result_lines.append(':'.join(segs))
 	return result_lines
 

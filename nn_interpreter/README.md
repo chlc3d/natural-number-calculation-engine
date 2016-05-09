@@ -14,5 +14,5 @@ The interpreter stores the output tape internally, and writes its full contents 
 
 The NNCE interpreter uses the ASCII character set as its I/O mapping.
 
-### Outpd behavior
-OUTPD writes the value of the next cell to both STDOUT and the output tape. Note that this doesn't convert to ASCII: It writes the literal number or command stored in the next cell.
+### WRITD behavior
+WRITD writes the value of the next cell to both STDOUT and the output tape. Note that this doesn't convert to ASCII: It writes the literal number or command stored in the next cell.

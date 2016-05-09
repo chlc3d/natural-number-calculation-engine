@@ -16,9 +16,9 @@ class State:
 			"decr": 0,
 			"goto": 0,
 			"copy": 0,
-			"inpt": 0,
-			"outp": 0,
-			"outpd": 0,
+			"read": 0,
+			"writ": 0,
+			"writd": 0,
 			"number": 0
 		}
 
@@ -177,9 +177,9 @@ def interpret(debug, program_lines, input_files):
 			"decr": _decr,
 			"goto": _goto,
 			"copy": _copy,
-			"inpt": _user_input,
-			"outp": _output,
-			"outpd": _debug_output
+			"read": _user_input,
+			"writ": _output,
+			"writd": _debug_output
 		}[instr](state)
 
 

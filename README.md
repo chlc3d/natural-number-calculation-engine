@@ -10,9 +10,9 @@ The natural-number calculation engine can be modeled as a machine with three tap
 
 The *Program Tape* stores all commands and all data that the program is operating on. The program tape consists of a series of cells, each of which can store a command or a natural number. All of the commands defined by NNCE read and/or write information from/to the program tape.  The *Tape Head* tracks the program's current location on the program tape. Excluding commands that specify otherwise, the tape head moves forward to the next cell after executing the command in the previous cell. When the tape head encounter a number in a cell rather than a command, it will do nothing and move on to the next cell.
 
-The *Input Tape* is used to provide external data to a program. The INPT command will read the next character on the input tape, write it to the program tape, and move the *Input Tape head* forward. The input tape is read-once: the input tape head cannot move backwards.
+The *Input Tape* is used to provide external data to a program. The READ command will read the next character on the input tape, write it to the program tape, and move the *Input Tape head* forward. The input tape is read-once: the input tape head cannot move backwards.
 
-The *Output Tape* is used to write data to an external source to show the results of an NNCE computation. The OUTP command writes data from the program tape to the location of the *Output Tape Head*, and move the output tape head forward. The output tape is write-once: the output tape head cannot move backwards.
+The *Output Tape* is used to write data to an external source to show the results of an NNCE computation. The WRIT command writes data from the program tape to the location of the *Output Tape Head*, and move the output tape head forward. The output tape is write-once: the output tape head cannot move backwards.
 
 An NNCE program consists of a series of commands and numbers, separated by line breaks, which initialize the state of the program tape. Tape cells that have not been set are considered to be 0.
 
@@ -56,7 +56,7 @@ If a single address is specified multiple times in an NNCE program, such as in t
 
 ### I/O mapping
 
-The *I/O mapping* is a function from a set of characters (the *I/O range*) to a set of natural numbers. The input tape should contain only characters on the I/O range. The I/O mapping is used to select the number to write for the INPT command. The OUTP command operates on the same range to write characters to the output tape. These are defined in more detail in the descriptions of the INPT and OUTP commands.
+The *I/O mapping* is a function from a set of characters (the *I/O range*) to a set of natural numbers. The input tape should contain only characters on the I/O range. The I/O mapping is used to select the number to write for the READ command. The WRIT command operates on the same range to write characters to the output tape. These are defined in more detail in the descriptions of the READ and WRIT commands.
 
 The details of the I/O mapping and I/O range are implementation-defined.
 
@@ -95,21 +95,21 @@ Numbers aren't commands. When the tape head sees a number, it will simply move p
 
 ## I/O Commands
 The natural number calculation engine has some basic character-based I/O facilities.
-### INPT
+### READ
 Read the next character from the input tape, and write the number which corresponds to it to the next cell on the program tape.
 
 The I/O mapping determines the number to write to the program tape.
 
-If the INPT command is executed when the input tape is exhausted, 0 will be written to the next cell on the program tape.
+If the READ command is executed when the input tape is exhausted, 0 will be written to the next cell on the program tape.
 
-### OUTP
-The OUTP command examines the next cell on the program tape. If it is a number in the valid I/O range, it writes the character corresponding to that number to the output tape.
+### WRIT
+The WRIT command examines the next cell on the program tape. If it is a number in the valid I/O range, it writes the character corresponding to that number to the output tape.
 
 The I/O mapping determines the character to write to the output tape.
-The mapping of numbers to characters is implementation-defined, but must match that of the INPT command.
+The mapping of numbers to characters is implementation-defined, but must match that of the READ command.
 
-It is undefined behavior to execute the OUTP command when it is followed by another command rather than number.
+It is undefined behavior to execute the WRIT command when it is followed by another command rather than number.
 It is undefined behavior to attempt to output a number outside of the I/O range.
 
-### OUTPD
-The behavior of the OUTPD command is implementation-defined. Its inteded use is for debugging NNCE programs.
+### WRITD
+The behavior of the WRITD command is implementation-defined. Its intended use is for debugging NNCE programs.
