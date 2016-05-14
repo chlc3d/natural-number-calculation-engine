@@ -30,7 +30,6 @@ def compile(program_lines):
 				addr = addr.strip()
 				assert addr != '', "Empty address (line %i)" % (idx + 1)
 				assert addr not in name_to_loc, "Multiple definitions of %s (line %i)" % (addr, idx+1)
-
 				name_to_loc[addr] = str(curr_addr)
 			else:
 				assert curr_addr <= int(addr), "Could not satisfy current address in %s" % line
@@ -46,11 +45,25 @@ def compile(program_lines):
 	#Convert usages of symbolic addresses
 	for idx, line in enumerate(program_lines):
 		segs = line.split('$')
+		cell = segs[0]
+		if len(cell) > 0 and cell[0] == '^':
+			cell_value = cell.lower()[1:]
+			assert cell_value in name_to_loc, \
+						"Undefined address %s (used on line %i)" % (cell, idx)
+			cell = name_to_loc[cell.lower()[1:]]
+		assert cell.isdigit() or cell.lower()  \
+					in ['', 'writd', 'incr', 'decr', 'copy', 'read', 'writ', 'goto'], \
+					"unknown segment %s on line %i" % (cell, idx)
 
-		segs = [name_to_loc.get(s.lower(), s) for s in segs]
-		for seg in segs:
-			assert seg.isdigit() or seg.lower() in ['', 'writd', 'incr', 'decr', 'copy', 'read', 'writ', 'goto'], "unknown segment %s on line %i" % (seg, idx)
-		result_lines.append('$'.join(segs))
+		if len(segs) > 1:
+			assert len(segs) == 2, "Extra segment %s on line %i" % (seg[2], idx)
+			addr = segs[1]
+			addr = name_to_loc.get(addr.lower(), addr)
+			assert addr.isdigit()
+		if len(segs) == 1:
+			result_lines.append(cell)
+		else:
+			result_lines.append('$'.join([cell,addr]))
 	return result_lines
 
 
