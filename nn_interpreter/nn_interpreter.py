@@ -121,7 +121,13 @@ def interpret_file(debug, program_path, input_files):
 	return interpret(debug, program, input_files)
 
 
-def interpret(debug, program_lines, input_files):
+def interpret(debug, program, input_files):
+
+	try:
+		program_lines = open(program).readlines()
+	except TypeError:
+		program_lines = program
+
 
 	user_input = ''
 	for f in input_files:
