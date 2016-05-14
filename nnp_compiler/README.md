@@ -32,35 +32,6 @@ Named labels make it easier to write useful GOTO statements, since you don't hav
 
 Example:
 
-## Comments
-
-NN++ provides a comment functionality for documenting code. If you use a pound sign (#), everything after it on that line will be ignored by the compiler
-
-Example
-
-	#Read the next 6 characters of input,
-	#then go to the trap address
-	idx: 5
-
-	loopstart: READ
-	0
-
-	#Decrement index and trap if it hits -1
-	COPY
-	idx
-	decr_pos
-
-	DECR
-	decr_pos:0
-
-	COPY
-	decr_pos
-	idx
-
-	#If we didn't trap, start the loop over.
-	GOTO
-	loopstart
-
 ## Code Sections
 
 You can put curly braces ("{" and "}") around any number of cell-descriptors. These define those cell-descriptions as a *code section*. Code sections cannot be nested.

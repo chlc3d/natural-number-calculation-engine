@@ -3,14 +3,16 @@
 
 COPY
 2
-7
+7 #Test-for-zero register
 
+# If the input is 0, we reached the end of the file
+# and should stop executing.
 DECR
 7:0
 
 COPY
 2
-12
+12 #Output register
 
 WRIT
 12:0

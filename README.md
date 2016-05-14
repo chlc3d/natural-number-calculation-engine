@@ -31,6 +31,12 @@ Commands tell the natural number calculation engine to do something when the tap
 
 The natural number calculation engine only handles natural numbers. If you attempt to decrement 0 (an operation which would create a negative number), the *exception-handling mechanism* will fire. When an exception occurs, the tape head moves to cell 98. You should place any exception-handling code at this location.
 
+### I/O mapping
+
+The *I/O mapping* is a function from a set of characters (the *I/O range*) to a set of natural numbers. The input tape should contain only characters on the I/O range. The I/O mapping is used to select the number to write for the READ command. The WRIT command operates on the same range to write characters to the output tape. These are defined in more detail in the descriptions of the READ and WRIT commands.
+
+The details of the I/O mapping and I/O range are implementation-defined.
+
 ## Syntax
 
 Each non-empty line of an NNCE program represents a cell. A line is called a *cell specifier*.
@@ -54,13 +60,37 @@ If a single address is specified multiple times in an NNCE program, such as in t
 	20
 	11: 30
 
-### I/O mapping
 
-The *I/O mapping* is a function from a set of characters (the *I/O range*) to a set of natural numbers. The input tape should contain only characters on the I/O range. The I/O mapping is used to select the number to write for the READ command. The WRIT command operates on the same range to write characters to the output tape. These are defined in more detail in the descriptions of the READ and WRIT commands.
+### Comments
 
-The details of the I/O mapping and I/O range are implementation-defined.
+NNCE provides a comment functionality for documenting code. If you use a pound sign (#), everything after it on that line will be ignored.
 
-### End of execution
+Example
+
+	#Read the next 6 characters of input,
+	#then go to the trap address
+	idx: 5
+
+	loopstart: READ
+	0
+
+	#Decrement index and trap if it hits -1
+	COPY
+	idx
+	decr_pos
+
+	DECR
+	decr_pos:0
+
+	COPY
+	decr_pos
+	idx
+
+	#If we didn't trap, start the loop over.
+	GOTO
+	loopstart
+
+## End of execution
 The NNCE program halts execution if there is no command in the current cell or any cell afterward.
 
 ## File Conventions

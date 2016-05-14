@@ -140,7 +140,11 @@ def interpret(debug, program, input_files):
 	state = State(memory=dict(), tape=user_input)
 
 	for line in program_lines:
+		#remove whitespace
 		line = ''.join(line.split())
+
+		#remove segment of line after comment marker
+		line = ''.join(line.split('#')[0].split())
 		if line == '':
 			continue
 
