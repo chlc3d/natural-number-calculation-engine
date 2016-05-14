@@ -50,15 +50,15 @@ Cell specifiers may also optionally contain an *address label*. The address labe
 This program initalizes cells 0,7,8, and 20 to the values 1,2,3, and 4; respectively:
 
 	1
-	7: 2
+	2 $7
 	3
-	20: 4
+	4 $20
 
 If a single address is specified multiple times in an NNCE program, such as in the example below, the behavior is undefined:
 
-	10: GOTO
+	GOTO $10
 	20
-	11: 30
+	30 $11
 
 
 ### Comments
@@ -69,26 +69,26 @@ Example
 
 	#Read the next 6 characters of input,
 	#then go to the trap address
-	idx: 5
+	5 $10
 
-	loopstart: READ
+	READ $20
 	0
 
 	#Decrement index and trap if it hits -1
 	COPY
-	idx
-	decr_pos
+	10
+	30
 
 	DECR
-	decr_pos:0
+	0 $30
 
 	COPY
-	decr_pos
-	idx
+	30
+	10
 
 	#If we didn't trap, start the loop over.
 	GOTO
-	loopstart
+	20
 
 ## End of execution
 The NNCE program halts execution if there is no command in the current cell or any cell afterward.

@@ -19,13 +19,13 @@ Example:
 	GOTO
 	my_location
 
-	mylocation:INCR
+	INCR $my_location
 	my_location
 
 Will become
 	GOTO
 	2
-	:INCR
+	INCR $2
 	2
 
 Named labels make it easier to write useful GOTO statements, since you don't have to do manual bookkeeping if you relocate a procedure.
