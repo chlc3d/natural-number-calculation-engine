@@ -148,15 +148,14 @@ def interpret(debug, program, input_files):
 		if line == '':
 			continue
 
-		line_sections = line.split(':')
+		line_sections = line.split('$')
+		content = line_sections[0]
 		if len(line_sections) == 1:
 			state.pc += 1
-			line_idx = state.pc
-			content = line_sections[0]
 		else:
-			line_idx = int(line_sections[0])
-			state.pc = line_idx
-			content = line_sections[1]
+			state.pc = int(line_sections[1])
+		line_idx = state.pc
+			
 
 		if content.isdigit():
 			state.memory[line_idx] = int(content)

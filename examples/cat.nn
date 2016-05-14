@@ -1,5 +1,5 @@
-1:READ
-2:0
+READ $1
+0    $2
 
 COPY
 2
@@ -8,14 +8,14 @@ COPY
 # If the input is 0, we reached the end of the file
 # and should stop executing.
 DECR
-7:0
+0    $7
 
 COPY
 2
 12 #Output register
 
 WRIT
-12:0
+0    $12
 
 GOTO
 0

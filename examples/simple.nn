@@ -1,47 +1,47 @@
 READ
-2:0
+0    $2
 
 COPY
 2
 8
 
-7:INCR
-8:0
+INCR $7
+0    $8
 
 COPY
 8
 20
 
-19:DECR
+DECR $19
 0
 
 COPY
 20
 40
 
-39:DECR
+DECR $39
 0
 
 COPY
 40
 60
 
-59:DECR
+DECR $59
 10
 
 GOTO
 0
 
-98: DECR
+DECR $98
 1
 
 
-200: READ
-201: 0
+READ $200
+0    $201
 
-203: COPY
-204: 201
-205: 207
+COPY $203
+201  $204
+207  $205
 
-206: WRIT
-207: 0
+WRIT $206
+0    $207

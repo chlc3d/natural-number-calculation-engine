@@ -19,14 +19,16 @@ def compile(program_lines):
 		line = filter(lambda x: x != '{' and x != '}', line)
 		line = line.strip()
 		line = ''.join(line.split('#')[0].split())
-		line_segs = line.split(":")
+		line_segs = line.split("$")
 		if line != '':
 			curr_addr += 1
 
 		if len(line_segs) == 2:
-			addr = line_segs[0]
+			addr = line_segs[1]
 			if not addr.isdigit():
 				addr = addr.lower()
+				addr = addr.strip()
+				assert addr != '', "Empty address (line %i)" % (idx + 1)
 				assert addr not in name_to_loc, "Multiple definitions of %s (line %i)" % (addr, idx+1)
 
 				name_to_loc[addr] = str(curr_addr)
@@ -39,15 +41,16 @@ def compile(program_lines):
 
 	program_lines = newlines
 	result_lines = []
+
 	#Second pass:
 	#Convert usages of symbolic addresses
 	for idx, line in enumerate(program_lines):
-		segs = line.split(':')
+		segs = line.split('$')
 
 		segs = [name_to_loc.get(s.lower(), s) for s in segs]
 		for seg in segs:
 			assert seg.isdigit() or seg.lower() in ['', 'writd', 'incr', 'decr', 'copy', 'read', 'writ', 'goto'], "unknown segment %s on line %i" % (seg, idx)
-		result_lines.append(':'.join(segs))
+		result_lines.append('$'.join(segs))
 	return result_lines
 
 

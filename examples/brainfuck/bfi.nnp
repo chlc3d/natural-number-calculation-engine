@@ -18,35 +18,35 @@ readloop
 #testsign_zero
 #testsign_input
 
-testsign: 0
+0 $testsign
 COPY
-testsign_zero: 0
+0 $testsign_zero
 trap
 
 DECR
-testsign_input: 0
+0 $testsign_input
 
 COPY
 testsign_input
 testsign_local1
 
-testsign_loop: 0
+0 $testsign_loop
 
 COPY
-testsign_neg: 0
+0 $testsign_neg
 trap
 DECR
-testsign_local1: 0
+0 $testsign_local1
 
 COPY
 testsign_local1
 testsign_local2
 
 COPY
-testsign_pos: 0
+0 $testsign_pos
 trap
 DECR
-testsign_local2: 0
+0 $testsign_local2
 
 COPY
 testsign_local2
@@ -55,14 +55,14 @@ testsign_local1
 GOTO
 testsign_loop
 
-98: GOTO
-trap: 0
+GOTO $98
+0 $trap
 
 ##########################################
 # Program input section
 ##########################################
-readloop: READ
-inp: 0
+READ $readloop
+0 $inp
 
 copy
 endread
@@ -78,11 +78,11 @@ nulltest
 #	deb_inpt
 #
 #	WRITD
-#	deb_inpt:0
+#	0 $deb_inpt
 }
 
 DECR
-nulltest: 0
+0 $nulltest
 
 # ASCII Table
 # + 2B
@@ -97,15 +97,15 @@ nulltest: 0
 ###
 # Drop Call
 ###
-table_start: table
-table: 43 # +  = 1
-0  # ,  = 2
-0  # -  = 3
-0  # .  = 4
-13 # <  = 5
-1  # >  = 6
-28 # [  = 7
-1  # ]  = 8
+table $table_start
+43 $table  # +  = 1
+0          # ,  = 2
+0          # -  = 3
+0          # .  = 4
+13         # <  = 5
+1          # >  = 6
+28         # [  = 7
+1          # ]  = 8
 
 COPY
 inp
@@ -141,17 +141,17 @@ dropaddr
 
 	#setup
 	{
-		dropaddr:0
+		0 $dropaddr
 	}
 
 
-	DROP:DROP
+	DROP $DROP
 
 	#args
-	#dropretaddr: 0 (THE RETURN ADDRESS)
-	#dropval: 0 (THE INPUT/OUTPUT NUMBER)
-	#droplen: 0 (THE LENGTH OF THE INPUT TABLE)
-	#dropaddr: 0 (THE ADDRESS OF THE INPUT TABLE)
+	# $dropretaddr (THE RETURN ADDRESS)
+	# $dropval     (THE INPUT/OUTPUT NUMBER)
+	# $droplen     (THE LENGTH OF THE INPUT TABLE)
+	# $dropaddr    (THE ADDRESS OF THE INPUT TABLE)
 
 	COPY
 	ZERO
@@ -168,23 +168,23 @@ dropaddr
 	GOTO
 	firstdroploop
 
-	droploop:droploop
+	droploop $droploop
 
 	#increment address
 	COPY
 	dropaddr
 	da_incr
 	INCR
-	da_incr: 0
+	0 $da_incr
 	COPY
 	da_incr
 	dropaddr
 
-	firstdroploop:0
+	0 $firstdroploop
 	#update result value
 	{
 		INCR
-		dropretval: 0
+		0 $dropretval
 
 
 		{ #Control flow traps
@@ -197,15 +197,15 @@ dropaddr
 			#ctrl_decr from firing twice
 			#todo wasteful
 			DECR
-			ctrl_decr:0
+			0 $ctrl_decr
 
 			GOTO
 			post_urv
 		}
 
 		{
-			hundred:100
-			setup_ctrl:setup_ctrl
+			100 $hundred
+			setup_ctrl $setup_ctrl
 			#Get the drop value and allocate space for
 			#end address. If we're end, actually generate
 			#the end address
@@ -221,7 +221,7 @@ dropaddr
 		}
 
 
-		post_urv:post_urv
+		post_urv $post_urv
 
 	}
 
@@ -231,13 +231,13 @@ dropaddr
 	dropaddr
 	dropaddr_indirect
 	COPY
-	dropaddr_indirect:0
+	0 $dropaddr_indirect
 	drop_table_elem
 
 	#output table element for debugging
 
 	{ #drop inner loop
-		drop_inner_loop:0
+		0 $drop_inner_loop
 
 		#subtract one from the total value.
 		#On failure, we're done!
@@ -245,7 +245,7 @@ dropaddr
 		dropfail
 		trap
 		DECR
-		dropval:0
+		0 $dropval
 
 		#subtract one from the loop variable
 		#On failure, repeat the drop loop!
@@ -253,14 +253,14 @@ dropaddr
 		droploop
 		trap
 		DECR
-		drop_table_elem:0
+		0 $drop_table_elem
 
 		GOTO
 		drop_inner_loop
 	}
 }
 
-dropfail: dropfail
+dropfail $dropfail
 
 #Copy the value into our instruction list.
 COPY
@@ -268,7 +268,7 @@ iptr
 iptr_indirect
 COPY
 dropretval
-iptr_indirect: 0
+0 $iptr_indirect
 
 { #Make space for startloop/endloop
 	COPY
@@ -276,7 +276,7 @@ iptr_indirect: 0
 	trap
 
 	DECR
-	isctrlflag:0
+	0 $isctrlflag
 
 	{
 		COPY
@@ -284,7 +284,7 @@ iptr_indirect: 0
 		iptr_incr10
 
 		INCR
-		iptr_incr10:0
+		0 $iptr_incr10
 
 		COPY
 		iptr_incr10
@@ -296,22 +296,22 @@ iptr_indirect: 0
 
 		COPY
 		invalid_address
-		iptr_deref44:0
+		0 $iptr_deref44
 	}
 
 	COPY
 	instr_count
 	instr_count_update
 	INCR
-	instr_count_update:0
+	0 $instr_count_update
 	COPY
 	instr_count_update
 	instr_count
 
-	end_ctrl_check:end_ctrl_check
+	end_ctrl_check $end_ctrl_check
 }
 
-postdropfail:postdropfail
+postdropfail $postdropfail
 
 
 ###
@@ -327,7 +327,7 @@ eol_incr1
 #	debug_itr
 #
 #	COPY
-#	debug_itr:0
+#	0 $debug_itr
 #	debug_result
 #
 #	COPY
@@ -335,24 +335,24 @@ eol_incr1
 #	debug_ptr
 #
 #	WRITD
-#	debug_ptr:0
+#	0 $debug_ptr
 #	WRITD
-#	debug_result:0
+#	0 $debug_result
 }
 
 INCR
-eol_incr1:0
+0 $eol_incr1
 
 COPY
 eol_incr1
 iptr
 
 INCR
-instr_count: 0
+0 $instr_count
 
 GOTO
 readloop
-endread: endread
+endread $endread
 
 ##########################################
 # End-of-read nonsense
@@ -364,14 +364,14 @@ iptr_indr
 
 COPY
 ZERO
-iptr_indr: 0
+0 $iptr_indr
 
 COPY
 iptr
 eor_incr1
 
 INCR
-eor_incr1:0
+0 $eor_incr1
 
 COPY
 eor_incr1
@@ -382,7 +382,7 @@ iptr
 ##########################################
 {
 	#constant!
-	instr_start_address: instr_start
+	instr_start $instr_start_address
 
 	COPY
 	iptr
@@ -415,21 +415,21 @@ iptr
 	instr_count
 	instr_count_decr
 
-	clean_startloops_loop:clean_startloops_loop
+	clean_startloops_loop $clean_startloops_loop
 
 	COPY
 	clean_startloops_done
 	trap
 
 	DECR
-	instr_count_decr:0
+	0 $instr_count_decr
 
 	COPY
 	iptr_increr
 	item_address
 
 	INCR
-	iptr_increr:0
+	0 $iptr_increr
 
 	{ #Setup call to testctrl to see if we're a [
 		COPY
@@ -449,7 +449,7 @@ iptr
 	testctrl
 
 	{ #setup_startloop subroutine
-		setup_startloop:setup_startloop
+		setup_startloop $setup_startloop
 
 		{ #Setup
 
@@ -471,7 +471,7 @@ iptr
 				iptr_preincr
 
 				INCR
-				iptr_preincr:0
+				0 $iptr_preincr
 
 				COPY
 				iptr_preincr
@@ -499,12 +499,12 @@ iptr
 
 		GOTO
 		jumpfwd
-		sstart_finish:sstart_finish
+		sstart_finish $sstart_finish
 
 		{ #Update invalid addresses
 
-			loop_endpoint:0
-			iptr_old_val:0
+			0 $loop_endpoint
+			0 $iptr_old_val
 
 			#Save the final address
 			COPY
@@ -524,7 +524,7 @@ iptr
 				iptr_deref92
 				COPY
 				loop_endpoint
-				iptr_deref92:0
+				0 $iptr_deref92
 			}
 
 			#Store the start loop index
@@ -534,13 +534,13 @@ iptr
 				loop_endpoint
 				post_loop_endpoint
 				INCR
-				post_loop_endpoint:0
+				0 $post_loop_endpoint
 				COPY
 				post_loop_endpoint
 				post_loop_endpoint_deref
 				COPY
 				iptr
-				post_loop_endpoint_deref:0
+				0 $post_loop_endpoint_deref
 			}
 		}
 
@@ -548,7 +548,7 @@ iptr
 		clean_startloops_loop
 	}
 
-	clean_startloops_done:clean_startloops_done
+	clean_startloops_done $clean_startloops_done
 }
 
 ##########################################
@@ -570,7 +570,7 @@ instr
 
 #Iterate over possible instructions
 
-instr:0
+0 $instr
 
 
 { #Call to testitem which implements the tokenizer
@@ -628,7 +628,7 @@ instr:0
 	post_nonloop_instr
 	testitem_addr
 
-	interpreterloop: 0
+	0 $interpreterloop
 
 	COPY
 	iptr
@@ -638,14 +638,14 @@ instr:0
 	testitem
 }
 
-post_nonloop_instr: post_nonloop_instr
+post_nonloop_instr $post_nonloop_instr
 
 COPY
 iptr
 incrme
 
 INCR
-incrme: 0
+0 $incrme
 
 COPY
 incrme
@@ -669,7 +669,7 @@ interpreterloop
 # ]  = 8 (bf_loop_right)
 
 
-endinterpret: endinterpret
+endinterpret $endinterpret
 GOTO
 finale
 
@@ -678,22 +678,22 @@ finale
 # *data = *dataptr
 # *dataptr_ptr = dataptr
 #######
-data: 0
-setdata: setdata
+0 $data
+setdata $setdata
 COPY
 dataptr
 dataptr_ptr
 COPY
-dataptr_ptr : 0
+0 $dataptr_ptr
 data
 GOTO
-postsetdata: 0
+0 $postsetdata
 
 
 #######
 # BF_INCR
 #######
-bf_incr: bf_incr
+bf_incr $bf_incr
 
 #WRITD
 #1111
@@ -706,7 +706,7 @@ GOTO
 setdata
 
 #return from setdata
-bf_incr_rest:bf_incr_rest
+bf_incr_rest $bf_incr_rest
 
 { #testsign call
 
@@ -727,7 +727,7 @@ bf_incr_rest:bf_incr_rest
 	testsign
 }
 
-pos_path: pos_path
+pos_path $pos_path
 #WRITD
 #11112
 
@@ -735,12 +735,12 @@ COPY
 data
 bfincr_1
 INCR
-bfincr_1: 0
+0 $bfincr_1
 COPY
 bfincr_1
 bfincr_2
 INCR
-bfincr_2: 0
+0 $bfincr_2
 COPY
 bfincr_2
 data
@@ -752,13 +752,13 @@ data
 
 	COPY
 	data
-	dataptr_bfincr_deref:0
+	0 $dataptr_bfincr_deref
 }
 
 GOTO
 post_nonloop_instr
 
-neg_path_careful : neg_path_careful
+neg_path_careful $neg_path_careful
 #WRITD
 #11113
 
@@ -771,7 +771,7 @@ COPY
 data
 bfdecr_1
 DECR
-bfdecr_1: 0
+0 $bfdecr_1
 
 COPY
 bfdecr_1
@@ -781,12 +781,12 @@ bfdecr_1
 bfdecr_2
 
 DECR
-bfdecr_2: 0
+0 $bfdecr_2
 COPY
 bfdecr_2
 data
 
-after_decrs:after_decrs
+after_decrs $after_decrs
 { #**dataptr = *data
 	COPY
 	dataptr
@@ -794,7 +794,7 @@ after_decrs:after_decrs
 
 	COPY
 	data
-	dataptr_bfincr_deref2:0
+	0 $dataptr_bfincr_deref2
 }
 
 GOTO
@@ -804,7 +804,7 @@ post_nonloop_instr
 # BF_DECR
 #######
 
-bf_decr: bf_decr
+bf_decr $bf_decr
 
 #WRITD
 #3333
@@ -814,7 +814,7 @@ bf_decr_rest
 postsetdata
 GOTO
 setdata
-bf_decr_rest:bf_decr_rest
+bf_decr_rest $bf_decr_rest
 
 COPY
 data
@@ -832,7 +832,7 @@ testsign_neg
 GOTO
 testsign
 
-decr_zero: decr_zero
+decr_zero $decr_zero
 #If we decrement zero, we switch to negative (= odd numbers)
 #it will always be 1!
 
@@ -843,7 +843,7 @@ decr_zero: decr_zero
 
 	COPY
 	ONE
-	dataptr_bfincr_deref3:0
+	0 $dataptr_bfincr_deref3
 }
 
 COPY
@@ -856,7 +856,7 @@ post_nonloop_instr
 #######
 # bf_move_right
 #######
-bf_move_right: bf_move_right
+bf_move_right $bf_move_right
 
 #WRITD
 #6666
@@ -865,13 +865,13 @@ COPY
 dataptr
 dataptr_mr_local1
 INCR
-dataptr_mr_local1:0
+0 $dataptr_mr_local1
 
 COPY
 dataptr_mr_local1
 dataptr_mr_local2
 INCR
-dataptr_mr_local2:0
+0 $dataptr_mr_local2
 
 COPY
 dataptr_mr_local2
@@ -883,7 +883,7 @@ post_nonloop_instr
 #######
 # bf_move_left
 #######
-bf_move_left: bf_move_left
+bf_move_left $bf_move_left
 
 #WRITD
 #5555
@@ -892,13 +892,13 @@ COPY
 dataptr
 dataptr_ml_local1
 DECR
-dataptr_ml_local1:0
+0 $dataptr_ml_local1
 
 COPY
 dataptr_ml_local1
 dataptr_ml_local2
 DECR
-dataptr_ml_local2:0
+0 $dataptr_ml_local2
 
 COPY
 dataptr_ml_local2
@@ -911,7 +911,7 @@ post_nonloop_instr
 # bf_loop_start
 #######
 {
-	bf_loop_start: bf_loop_start
+	bf_loop_start $bf_loop_start
 	#WRITD
 	#7777
 
@@ -927,7 +927,7 @@ post_nonloop_instr
 	postsetdata
 	GOTO
 	setdata
-	bf_loopstart_rest:bf_loopstart_rest
+	bf_loopstart_rest $bf_loopstart_rest
 
 	{ #testsign call
 	#If nonpositive, runtime jumpfwd
@@ -958,14 +958,14 @@ post_nonloop_instr
 
 
 { #increment instruction pointer
-	iptr_incr:iptr_incr
+	iptr_incr $iptr_incr
 
 	COPY
 	iptr
 	iptr_incr_jumpfwd
 
 	INCR
-	iptr_incr_jumpfwd:0
+	0 $iptr_incr_jumpfwd
 
 	COPY
 	iptr_incr_jumpfwd
@@ -976,14 +976,14 @@ post_nonloop_instr
 }
 
 { #decrement instruction pointer
-	iptr_decr:iptr_decr
+	iptr_decr $iptr_decr
 
 	COPY
 	iptr
 	iptr_decr_jumpfwd
 
 	DECR
-	iptr_decr_jumpfwd:0
+	0 $iptr_decr_jumpfwd
 
 	COPY
 	iptr_decr_jumpfwd
@@ -998,14 +998,14 @@ post_nonloop_instr
 #######
 {
 
-	runtime_jump:runtime_jump
+	runtime_jump $runtime_jump
 
 	COPY
 	iptr
 	iptr_rt_incr
 
 	INCR
-	iptr_rt_incr:0
+	0 $iptr_rt_incr
 
 	COPY
 	iptr_rt_incr
@@ -1019,7 +1019,7 @@ post_nonloop_instr
 	iptr_deref_runtime_jump
 
 	COPY
-	iptr_deref_runtime_jump:0
+	0 $iptr_deref_runtime_jump
 	iptr
 
 	{ #debug
@@ -1028,18 +1028,18 @@ post_nonloop_instr
 #		iptr_output_debug
 #
 #		WRITD
-#		iptr_output_debug:0
+#		0 $iptr_output_debug
 	}
 
 	GOTO
-	runtime_jump_ret:0
+	0 $runtime_jump_ret
 }
 
 #######
 # bf_loop_end
 #######
 {
-	bf_loop_end: bf_loop_end
+	bf_loop_end $bf_loop_end
 
 #	WRITD
 #	8888
@@ -1056,7 +1056,7 @@ post_nonloop_instr
 	postsetdata
 	GOTO
 	setdata
-	bf_loopend_rest:bf_loopend_rest
+	bf_loopend_rest $bf_loopend_rest
 
 	{ #testsign call
 		#If positive, jumpfwd... backward!
@@ -1083,17 +1083,17 @@ post_nonloop_instr
 #######
 # bf_input
 #######
-bf_input: bf_input
+bf_input $bf_input
 
 READ
-bf_inp_slot: 0
+0 $bf_inp_slot
 
-{ #reinterlace data:
+{	#reinterlace data
 	#multiply input by 2!
 	#Soo, decr the original value
 	#		add two to new value
 
-	bf_inp_result:0
+	0 $bf_inp_result
 
 
 
@@ -1116,20 +1116,20 @@ bf_inp_slot: 0
 	}
 
 	{ #reinterlace loop
-		reinterlace_me:0
+		0 $reinterlace_me
 
 		DECR
-		decr_orig:0
+		0 $decr_orig
 
 		INCR
-		new_incr1:0
+		0 $new_incr1
 
 		COPY
 		new_incr1
 		new_incr2
 
 		INCR
-		new_incr2:0
+		0 $new_incr2
 
 		COPY
 		new_incr2
@@ -1143,7 +1143,7 @@ bf_inp_slot: 0
 		reinterlace_me
 	}
 
-	reinterlace_done:reinterlace_done
+	reinterlace_done $reinterlace_done
 
 }
 
@@ -1153,7 +1153,7 @@ data_deref_spot
 
 COPY
 bf_inp_result
-data_deref_spot:0
+0 $data_deref_spot
 
 { #debug
 #	COPY
@@ -1161,11 +1161,11 @@ data_deref_spot:0
 #	mmmm
 
 #	COPY
-#	mmmm: 0
+#	0 $mmmm
 #	input_deb
 
 #	WRITD
-#	input_deb:0
+#	0 $input_deb
 }
 
 GOTO
@@ -1174,7 +1174,7 @@ post_nonloop_instr
 #######
 # bf_output
 #######
-bf_output: bf_output
+bf_output $bf_output
 
 #WRITD
 #4444
@@ -1189,10 +1189,10 @@ post_deinterlace
 
 GOTO
 setdata
-bf_outp_rest:bf_outp_rest
+bf_outp_rest $bf_outp_rest
 
 WRIT
-deinterlace_output:0
+0 $deinterlace_output
 
 GOTO
 post_nonloop_instr
@@ -1201,7 +1201,7 @@ post_nonloop_instr
 ##########################################
 # Deinterlace subroutine
 ##########################################
-deinterlace_data:deinterlace_data
+deinterlace_data $deinterlace_data
 
 #0 => 0
 #1,2 => 1
@@ -1224,12 +1224,12 @@ deinterlace_data:deinterlace_data
 	deinter_decr1
 	
 	DECR
-	deinter_decr1:0
+	0 $deinter_decr1
 }
 
 
 { #deinterlace loop
-	deinterlace_loop_start:deinterlace_loop_start
+	deinterlace_loop_start $deinterlace_loop_start
 
 	{ #Increment output
 		COPY
@@ -1237,7 +1237,7 @@ deinterlace_data:deinterlace_data
 		output_incr
 
 		INCR
-		output_incr:0
+		0 $output_incr
 
 		COPY
 		output_incr
@@ -1249,12 +1249,12 @@ deinterlace_data:deinterlace_data
 		deinter_decr1
 		deinter_decr2
 		DECR
-		deinter_decr2:0
+		0 $deinter_decr2
 		COPY
 		deinter_decr2
 		deinter_decr3
 		DECR
-		deinter_decr3:0
+		0 $deinter_decr3
 
 		COPY
 		deinter_decr3
@@ -1268,18 +1268,18 @@ deinterlace_data:deinterlace_data
 
 
 GOTO
-post_deinterlace:post_deinterlace
+post_deinterlace $post_deinterlace
 
 ########
 # TESTCTRL
 ########
 {
-	testctrl: testctrl
+	testctrl $testctrl
 
 	#Addresses of parameters
-	testctrl_start: 0
-	testctrl_end: 0
-	testctrl_nonctrl: 0
+	0 $testctrl_start
+	0 $testctrl_end
+	0 $testctrl_nonctrl
 
 	{ #set up call to testitem
 		COPY
@@ -1329,14 +1329,14 @@ post_deinterlace:post_deinterlace
 # jumpfwd
 #####
 { #Search for ] and go there!
-	jumpfwd:jumpfwd
+	jumpfwd $jumpfwd
 
 	#scan forward in instruction pointer, incrementing for start loop
 	#and decrementing for end loop. Trap on loopcount < 0
 
 	GOTO
-	iptr_fun:0
-	iptr_fun_ret:0
+	0 $iptr_fun
+	0 $iptr_fun_ret
 
 	{ #testctrl call
 		#Some setup happens at the top!
@@ -1354,7 +1354,7 @@ post_deinterlace:post_deinterlace
 	}
 
 	{ #Just increment and ignore this instruction!
-		jumpfwd_ignore: jumpfwd_ignore
+		jumpfwd_ignore $jumpfwd_ignore
 
 
 
@@ -1363,13 +1363,13 @@ post_deinterlace:post_deinterlace
 	}
 
 	{
-		jumpfwd_isstart: jumpfwd_isstart
+		jumpfwd_isstart $jumpfwd_isstart
 
 		COPY
 		loopcount
 		loopcount_incr1
 		INCR
-		loopcount_incr1:0
+		0 $loopcount_incr1
 		COPY
 		loopcount_incr1
 		loopcount
@@ -1379,7 +1379,7 @@ post_deinterlace:post_deinterlace
 	}
 
 	{
-		jumpfwd_isend: jumpfwd_isend
+		jumpfwd_isend $jumpfwd_isend
 
 		COPY
 		loopcount
@@ -1389,7 +1389,7 @@ post_deinterlace:post_deinterlace
 		trap
 
 		DECR
-		jumpfwd_local_decr: 0
+		0 $jumpfwd_local_decr
 
 		COPY
 		jumpfwd_local_decr
@@ -1399,18 +1399,18 @@ post_deinterlace:post_deinterlace
 		jumpfwd
 	}
 
-	jumpfwd_over:jumpfwd_over
+	jumpfwd_over $jumpfwd_over
 
 
 	#TODO: if no special work is needed on
 	#jumpfwd_over, remove label and replace
 	#with post_nonloop_instr
 
-	#TODO I may be able to save several
+	#TODO: I may be able to save several
 	#copies per interpret for non control
 	#ops by resetting jumpfwds here!
 	GOTO
-	jumpfwd_ret:0
+	0 $jumpfwd_ret
 }
 
 #######
@@ -1418,18 +1418,18 @@ post_deinterlace:post_deinterlace
 #######
 { #Test which brainfuck symbol (or eof) is at the instruction pointer!
 
-	eof:0
-	plus: 0
-	comma: 0
-	minus: 0
-	dot: 0
-	move_left: 0
-	move_right: 0
-	loop_start: 0
-	loop_end:0
+	0 $eof
+	0 $plus
+	0 $comma
+	0 $minus
+	0 $dot
+	0 $move_left
+	0 $move_right
+	0 $loop_start
+	0 $loop_end
 	#item_address
 
-	testitem:testitem
+	testitem $testitem
 
 	#EOF = 0 (end)
 	# +  = 1 (bf_incr)
@@ -1443,7 +1443,7 @@ post_deinterlace:post_deinterlace
 
 	#copy current instruction to chkend
 	COPY
-	item_address:0
+	0 $item_address
 	chkend
 
 	{ #debug
@@ -1453,14 +1453,13 @@ post_deinterlace:post_deinterlace
 #		print_addr
 #
 #		WRITD
-#		print_addr:0
+#		0 $print_addr
 #
 #		COPY
 #		chkend
 #		debug_instr_strt
 #		WRITD
-#		debug_instr_strt:0
-	#
+#		0 $debug_instr_strt
 
 	}
 
@@ -1470,7 +1469,7 @@ post_deinterlace:post_deinterlace
 	eof
 	trap
 	DECR
-	chkend: 0
+	0 $chkend
 
 	COPY
 	plus
@@ -1479,7 +1478,7 @@ post_deinterlace:post_deinterlace
 	chkend
 	chkincr
 	DECR
-	chkincr: 0
+	0 $chkincr
 
 	COPY 
 	comma
@@ -1488,7 +1487,7 @@ post_deinterlace:post_deinterlace
 	chkincr
 	chkinpt
 	DECR
-	chkinpt: 0
+	0 $chkinpt
 
 	COPY 
 	minus
@@ -1497,7 +1496,7 @@ post_deinterlace:post_deinterlace
 	chkinpt
 	chkdecr
 	DECR
-	chkdecr: 0
+	0 $chkdecr
 
 	COPY 
 	dot
@@ -1506,7 +1505,7 @@ post_deinterlace:post_deinterlace
 	chkdecr
 	chkout
 	DECR
-	chkout: 0
+	0 $chkout
 
 	COPY 
 	move_left
@@ -1515,7 +1514,7 @@ post_deinterlace:post_deinterlace
 	chkout
 	chklmove
 	DECR
-	chklmove: 0
+	0 $chklmove
 
 	COPY 
 	move_right
@@ -1524,7 +1523,7 @@ post_deinterlace:post_deinterlace
 	chklmove
 	chkrmove
 	DECR
-	chkrmove: 0
+	0 $chkrmove
 
 	COPY 
 	loop_start
@@ -1533,7 +1532,7 @@ post_deinterlace:post_deinterlace
 	chkrmove
 	chklloop
 	DECR
-	chklloop: 0
+	0 $chklloop
 
 	COPY 
 	loop_end
@@ -1542,19 +1541,19 @@ post_deinterlace:post_deinterlace
 	chklloop
 	chkrloop
 	DECR
-	chkrloop: 0
+	0 $chkrloop
 
 	#WRITD
 	#9999
 
 	GOTO
-	testitem_addr:0
+	0 $testitem_addr
 
 	#TODO: should never reach here.
 	#Crash?
 }
 
-finale: finale
+finale $finale
 ##########################################
 # Global Data
 ##########################################
@@ -1563,20 +1562,20 @@ finale: finale
 ###
 # Constants
 ###
-zero: 0
-one: 1
-six: 6
-seven: 7
-startloop: 7
-endloop: 8
-invalid_address:111
+0 $zero
+1 $one
+6 $six
+7 $seven
+7 $startloop
+8 $endloop
+111 $invalid_address
 
 ###
 # Global scalars
 ###
-dataptr: 0
-iptr: instr_start
-loopcount: 0 # natural number
+0 $dataptr
+instr_start $iptr
+0 $loopcount #natural number
 
 ###
 # Global vectors
@@ -1588,8 +1587,8 @@ loopcount: 0 # natural number
 #  addr % 2 == 1 -> instructions (ascii code)
 
 
-preinstr: 0
-instr_start: 0
+0 $preinstr
+0 $instr_start
 
 
 
