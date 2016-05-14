@@ -2,18 +2,8 @@ import nn_interpreter.nn_interpreter as nn_interpreter
 import nnp_compiler.nnp_compiler as nnp_compiler
 import os
 
-def print_state(st):
-	print st.output
-
-	print ""
-	print "executed instructions: %s" % st.executed_instructions
-	print "total instructions: %s" % st.num_instructions_executed()
-	print "head moves: %s" % st.head_moves
-	print "final pc: %s" % st.pc
-	print ""
-
 def validate(nn_program, args, expected):
-	state = nn_interpreter.interpret(False, nn_program, args)
+	state = nn_interpreter.interpret(nn_program, args, debug=False)
 	print "expected: \n%s." % expected
 	print "output: \n%s." % state.output
 

@@ -53,6 +53,23 @@ class State:
 		self.head_moves += abs(self.pc - pc)
 		self.pc = pc
 
+	def __str__(self):
+		result = self.output
+
+		result += "\n"
+		result += "executed instructions: %s" % self.executed_instructions
+		result += '\n'
+		result += "total instructions: %s" % self.num_instructions_executed()
+		result += '\n'
+		result += "head moves: %s" % self.head_moves
+		result += '\n'
+		result += "hot lines: %s" % (
+			sorted(self.executeds.items(), key=lambda x:x[1], reverse=True)
+			[:50])
+		result += '\n'
+		result += "final pc: %s" % self.pc
+		return result
+
 #def get(mem, pc):
 	#return mem.get(pc, 0)
 #
@@ -116,12 +133,7 @@ def _debug_output(state):
 	state.output += "%s: %s\n" % (state.pc, state.get())
 	print "%s: %s\n" % (state.pc, state.get())
 
-def interpret_file(debug, program_path, input_files):
-	program = open(program_path).readlines()
-	return interpret(debug, program, input_files)
-
-
-def interpret(debug, program, input_files):
+def interpret(program, input_files, debug=False):
 
 	try:
 		program_lines = open(program).readlines()
@@ -197,8 +209,8 @@ def interpret(debug, program, input_files):
 	return state
 
 if __name__ == '__main__':
-	debug = False
-	state = interpret_file(debug, sys.argv[1], sys.argv[2:])
+	debug = True
+	state = interpret(sys.argv[1], sys.argv[2:], debug=debug)
 
 	print state.output
 	if debug:
@@ -207,4 +219,4 @@ if __name__ == '__main__':
 		print state.executed_instructions
 		print "head moves: %s" % state.head_moves
 		print "final pc: %s" % state.pc
-		print "hot lines: %s" % sorted(state.executeds.items(), key=lambda x:x[1], reverse=True)[:50]
+		

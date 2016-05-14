@@ -1,0 +1,95 @@
+### EXPECTED_DEFS
+### $trap
+### $zero
+
+### IFMAIN
+	0 $zero
+	17 $two
+	9999 $four
+
+	#Set up call
+	COPY
+	^two
+	^diff_smaller
+
+	COPY
+	^four
+	^diff_larger
+
+	COPY
+	^mypostdiff_addr
+	^postdiff_addr
+
+	GOTO
+	^difference
+
+	#Write out the result
+	^mypostdiff_addr $mypostdiff_addr
+
+	COPY 
+	^diff_ret
+	^myoutput
+
+	WRITD
+	0 $myoutput
+	
+	GOTO
+	^finale
+
+	GOTO $98
+	0 $trap
+###
+
+#0 $diff_smaller
+#0 $diff_larger
+0 $postdiff_addr
+#0 $diff_ret
+
+#Store diff_larger - diff_smaller in diff_ret
+0 $difference
+	#Reset diff_ret
+	COPY
+	^zero
+	^diff_ret
+
+	#Set trap address
+	COPY
+	^afterfirstloop
+	^trap
+
+	#The first loop decreases the larger number
+	#equal to the amount of occurences of the smaller number
+
+		#decrement smaller
+		DECR $startdiff_loop
+		0 $diff_smaller
+
+		#decrement larger
+		DECR
+		0 $diff_larger
+
+		GOTO
+		^startdiff_loop
+
+	^afterfirstloop $afterfirstloop
+	COPY
+	^diff_larger
+	^diff_larger_decr
+
+	COPY
+	^postdiff_addr
+	^trap
+
+	#Loop2 decrements diff_larger to 0 while incrementing diff_smaller
+		DECR $loop2
+		0 $diff_larger_decr
+
+		INCR
+		0 $diff_ret
+
+		GOTO
+		^loop2
+
+### IFMAIN
+	0 $finale
+###

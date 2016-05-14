@@ -1,0 +1,25 @@
+### Calculate difference from 0
+
+# Load digit into decrement register
+COPY
+^iptr
+^deref_iptr
+
+COPY
+0 $deref_iptr
+decr_register
+
+#
+
+
+GOTO    $98
+98      $trap
+
+
+#48 = 0
+
+^digits $iptr
+50      $digits 
+49
+57
+49 #2191
