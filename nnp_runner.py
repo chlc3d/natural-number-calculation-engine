@@ -25,4 +25,5 @@ if not args.compile_only:
 	if args.write_perf_info:
 		print interpreter_state
 	else:
-		print interpreter_state.output
+		pass
+		#print interpreter_state.output

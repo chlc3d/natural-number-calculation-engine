@@ -1,0 +1,31 @@
+### EXPECTED_DEFS
+### $handle_line
+### 	$posthandle_addr
+### 	$posthandle_eof_addr
+
+#0 $postparse_addr
+0 $parse
+
+	COPY
+	^postline_parse
+	^posthandle_addr
+
+	COPY
+	^posteof_parse
+	^posthandle_eof_addr
+
+	0 $parse_line_loop
+		GOTO
+		^handle_line
+
+		^postline_parse $postline_parse
+
+		#Anything else we might need to do here...
+		#Otherwise we can jump back to $parse_line_loop
+		GOTO
+		$parse_line_loop
+
+	^posteof_parse $posteof_parse
+	#if there's nothing else here this goto could be direct.
+	GOTO
+	0 $postparse_addr

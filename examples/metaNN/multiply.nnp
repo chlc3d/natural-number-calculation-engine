@@ -1,0 +1,100 @@
+### EXPECTED_DEFS
+### $trap
+### $zero
+
+### IFMAIN
+	0 $zero
+	13 $mylarger
+	1141 $mysmaller
+
+	#Set up call
+	COPY
+	^mylarger
+	^mul_larger
+
+	COPY
+	^mysmaller
+	^mul_smaller
+
+	COPY
+	^mypostmul_addr
+	^postmuladdr
+
+	GOTO
+	^multiply
+
+	#Write out the result
+	^mypostmul_addr $mypostmul_addr
+
+	COPY 
+	^mul_ret
+	^myoutput
+
+	WRITD
+	0 $myoutput
+	
+	GOTO
+	^finale
+
+	GOTO $98
+	0 $trap
+###
+
+0 $mul_larger
+#0 $mul_smaller
+#0 $postmul_addr
+#0 $mul_ret
+
+# Store mul_larger * mul_smaller in mul_ret
+# Note: mul_larger doesn't need to be larger than mul_smaller,
+# it's just less head moves that way.
+0 $multiply
+	#Reset mul_ret
+	COPY
+	^zero
+	^mul_ret
+
+	#Outer loop runs once for each mul_smaller
+	^startouterloop $startouterloop
+		#Set trap address for outer loop
+		COPY
+		^afterouterloop
+		^trap
+
+		#Test mul_smaller
+		DECR
+		0 $mul_smaller
+
+		#Set trap address for inner loop
+		COPY
+		^startouterloop
+		^trap
+
+		#Copy mul_larger into mul_larger_temp
+		COPY
+		^mul_larger
+		^mul_larger_temp
+
+		0 $startinnerloop
+
+			#test mul_larger_temp
+			DECR
+			0 $mul_larger_temp
+
+			#We know we can add one to mul_ret
+			INCR
+			0 $mul_ret
+			GOTO
+			^startinnerloop
+
+	#TODO: We could avoid having any code 
+	#after the outer loop by jumping straight
+	#to postmuladdr. Is it better? (has extra indirection)
+	^afterouterloop $afterouterloop
+
+	GOTO
+	0 $postmuladdr
+
+### IFMAIN
+	0 $finale
+###

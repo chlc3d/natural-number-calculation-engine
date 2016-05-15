@@ -1,25 +1,220 @@
-### Calculate difference from 0
+### EXPECTED_DEFS
+### $trap
+### $zero
+### $ten
 
-# Load digit into decrement register
+### IMPORT
+###		multiply.nnp
+###			$multiply
+###			$mul_larger
+###			$mul_smaller
+###			$postmul_addr
+###			$mul_ret
+
+### IFMAIN
+GOTO
+^main
+
+0 $zero
+10 $ten
+GOTO $98
+0 $trap
+
+###
+### multiply
+###
+		0 $mul_larger
+		#0 $mul_smaller
+		#0 $postmul_addr
+		#0 $mul_ret
+
+		# Store mul_larger * mul_smaller in mul_ret
+		# Note: mul_larger doesn't need to be larger than mul_smaller,
+		# it's just less head moves that way.
+		0 $multiply
+			#Reset mul_ret
+			COPY
+			^zero
+			^mul_ret
+
+			#Outer loop runs once for each mul_smaller
+			^startouterloop $startouterloop
+				#Set trap address for outer loop
+				COPY
+				^afterouterloop
+				^trap
+
+				#Test mul_smaller
+				DECR
+				0 $mul_smaller
+
+				#Set trap address for inner loop
+				COPY
+				^startouterloop
+				^trap
+
+				#Copy mul_larger into mul_larger_temp
+				COPY
+				^mul_larger
+				^mul_larger_temp
+
+				0 $startinnerloop
+
+					#test mul_larger_temp
+					DECR
+					0 $mul_larger_temp
+
+					#We know we can add one to mul_ret
+					INCR
+					0 $mul_ret
+					GOTO
+					^startinnerloop
+
+			#TODO: We could avoid having any code 
+			#after the outer loop by jumping straight
+			#to postmul_addr. Is it better? (has extra indirection)
+			^afterouterloop $afterouterloop
+
+			GOTO
+			0 $postmul_addr
+
+7 $table
+4
+3
+1
+2
+5
+2
+2
+2
+1
+
+5 $mylen
+
+^table $table_addr
+
+0 $main
+
 COPY
-^iptr
-^deref_iptr
+^table_addr
+^parse_num_arr_start
 
 COPY
-0 $deref_iptr
-decr_register
+^mylen
+^parse_num_arr_len
 
-#
+COPY
+^write_results
+^post_parse_num_addr
+
+GOTO
+^parse_num
+
+^write_results $write_results
+
+COPY
+^parse_num_ret
+^write_loc
+
+WRITD
+0 $write_loc
+
+GOTO
+^finale
+###
 
 
-GOTO    $98
-98      $trap
 
 
-#48 = 0
+#0 $parse_num_arr_start 	#These should be stored as natural numbers -- already converted
+						#from ASCII
+# 0 $parse_num_arr_len
+#0 $post_parse_num_addr
+#0 $parse_num_ret
 
-^digits $iptr
-50      $digits 
-49
-57
-49 #2191
+
+0 $parse_num
+	#Reset parse_num_ret
+	COPY
+	^zero
+	^parse_num_ret
+
+	^parseNum_loop $parseNum_loop
+		COPY
+		^after_parsenum_loop
+		^trap
+
+		DECR
+		$parse_num_arr_len
+
+		#Multiply the old value in parse_num_ret
+
+		COPY
+		^end_parsenum_loop
+		^postmul_addr
+
+		COPY
+		^ten
+		^mul_smaller
+
+		COPY
+		^parse_num_ret
+		^mul_larger
+
+		GOTO
+		^multiply
+
+		^end_parsenum_loop $end_parsenum_loop
+
+		COPY
+		^mul_ret
+		^parse_num_ret
+
+		#add the current number
+			COPY
+			^parse_num_arr_start
+			^parse_num_arr_start_deref
+
+			COPY
+			0 $parse_num_arr_start_deref
+			^inner_loop_decr
+
+			COPY
+			^inner_loop_after
+			^trap
+
+
+			0 $inner_loop_start
+
+				DECR
+				0 $inner_loop_decr
+
+				INCR
+				0 $parse_num_ret
+
+				COPY
+				^parse_num_ret
+				^middle_out
+
+				WRITD
+				0 $middle_out
+
+				GOTO
+				^inner_loop_start
+
+			^inner_loop_after $inner_loop_after
+
+			#Increment the parse_num_arrt_start
+			INCR
+			0 $parse_num_arr_start
+
+			GOTO
+			^parseNum_loop
+	^after_parsenum_loop $after_parsenum_loop
+
+	GOTO
+	0 $post_parse_num_addr
+
+### IFMAIN
+	0 $finale
+###

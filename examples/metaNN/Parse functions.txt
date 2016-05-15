@@ -1,0 +1,46 @@
+
+
+parse
+
+	handle_line|Read|(posthandlle_addr,posthandle_eof_addr) -> |iptr, data_section|
+	Handle lines for each file to populate all instructions
+
+parse_num
+	difference(diff_larger, diff_smaller, postdiff_addr) -> diff_ret
+	multiple(mul_larger, mul_smaller, postmul_addr) -> mul_ret
+	
+handle_line|Read|(posthandlle_addr, eof_addr) -> |iptr, data_section|
+	get_first_ch|Read|() -> first_chr (skips past whitespace)
+	switch_range(sr_char, sr_table_start_addr postsr_addr) -> sr_command_id_ret
+
+	Command ID used to index into functions
+		#:		35	skip_line
+		0-9:	48	write_num
+			parse_num
+		C(opy)	67	write_command
+		D(ecr)	68	''
+		G(oto)	71	''
+		I(ncr)	73	''
+		R(ead)	82	''
+		W(rit)	87	''
+
+	These all store "cell_value" except for skip_line
+	^These commands read up to the $ sign or end of line (# always goes to end of line).
+	They set a "last_meal" variable to see if a $ Sign got eaten.
+
+	If it did, call:
+		read_label|Read|(postreadlabel_addr) -> readlabel_num_ret
+			parse_num
+		Update iptr value based on readlabel_num_ret
+			Shouldn't need its own function?
+	If we didn't use skip_line:
+		write_instruction|iptr|(instruction, postwrite_addr) -> |iptr, data_section|
+
+
+
+
+
+
+
+
+
