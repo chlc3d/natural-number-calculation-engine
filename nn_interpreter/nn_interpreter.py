@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import sys
+import argparse
 
 EOF = 0
 
@@ -209,12 +210,22 @@ def interpret(program, input_files, debug=False):
 	return state
 
 if __name__ == '__main__':
-	debug = True
-	state = interpret(sys.argv[1], sys.argv[2:], debug=debug)
+	parser = argparse.ArgumentParser(description="Compile and run an NN++ program")
 
-	print state.output
-	if debug:
+	parser.add_argument('nn_file', help="NNCE file to run")
+	parser.add_argument('--debug', action='store_true', help="Enable debug features and output for interpreter")
+	parser.add_argument('--write-perf-info', action='store_true', help="Write interpreter performance info to stdout")
+	parser.add_argument('--nn-input-files', default=[], type=str, nargs="+", help = "Input files to NNCE script")
+	
+	args = parser.parse_args()
+	state = interpret(args.nn_file, args.nn_input_files, debug=args.debug)
 
+	if args.write_perf_info:
+		print state
+	else:
+		print state.output
+
+	if args.debug:
 		print ""
 		print state.executed_instructions
 		print "head moves: %s" % state.head_moves

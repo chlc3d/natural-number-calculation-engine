@@ -11,7 +11,7 @@ parser.add_argument('--compile-output', type=str, help="Where to store output fi
 parser.add_argument('--debug', action='store_true', help="Enable debug features and output for interpreter")
 parser.add_argument('--write-perf-info', action='store_true', help="Write interpreter performance info to stdout")
 parser.add_argument('--compile-only', action='store_true', help="Only compile the file; don't run it. Use with --compile-output")
-
+parser.add_argument('--nn-input-files', default=[], type=str, nargs="+", help = "Input files to NNCE script")
 args = parser.parse_args()
 
 compiled = nnp_compiler.compile_file(args.nnp_file)
@@ -21,7 +21,7 @@ if args.compile_output:
 		f.write('\n'.join(compiled))
 
 if not args.compile_only:
-	interpreter_state = nn_interpreter.interpret(compiled, [], debug=args.debug)
+	interpreter_state = nn_interpreter.interpret(compiled, args.nn_input_files, debug=args.debug)
 	if args.write_perf_info:
 		print interpreter_state
 	else:
