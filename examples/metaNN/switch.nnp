@@ -1,0 +1,159 @@
+### EXPECTED_DEFS
+### $trap
+### $zero
+
+### IFMAIN
+GOTO
+^main
+
+0 $zero
+GOTO $98
+0 $trap
+
+	7 $table
+	4
+	0
+	0
+	1
+	5
+	2
+	2
+	2
+	1
+
+	5 $mylen
+
+	^table $table_addr
+
+	11 $value
+
+	0 $main
+
+	COPY
+	^table_addr
+	^switch_addr
+
+	COPY
+	^mylen
+	^switch_len
+
+	COPY
+	^value
+	^switch_val
+
+	COPY
+	^write_results
+	^switch_ret_addr
+
+	GOTO
+	^switch
+
+	^write_results $write_results
+
+	COPY
+	^switch_ret_val
+	^write_loc
+
+	WRITD
+	0 $write_loc
+
+	GOTO
+	^finale
+###
+
+
+
+	##########################################
+	# SWITCH subroutine
+	##########################################
+	# The switch function is used to determine
+	# which "bucket" the switch value flls into.
+	# switch(buckets, x) =
+	#	the smallest value of n >= 1 such that
+	#	the sum of buckets 1 to n > x
+	#				
+	# given buckets = [4,3,3,2]
+	# x = 0  to 3  => 1
+	# x = 4  to 6  => 2
+	# x = 7  to 9  => 3
+	# x = 10 to 11 => 4
+	# x > 11 => undefined
+
+
+	#args
+	# $switch_ret_addr 	#(The return address)
+	# $switch_ret_val   #(The return value)
+	# $switch_val		#(The Value to switch on)
+	0 $switch_len     	#(The length of the input table. Currently ignored.)
+	# $switch_addr    	#(the address of the input table)
+
+
+	^switch $switch
+
+
+	#Reset switch_ret_valval
+	COPY
+	^zero
+	^switch_ret_val
+
+	GOTO
+	^firstswitchloop
+
+	^switchloop $switchloop
+
+	#increment address
+	INCR
+	0 $switch_addr
+
+	0 $firstswitchloop
+	#update result value
+	{
+		INCR
+		0 $switch_ret_val
+
+		#Compute the table element.
+		#We'll decrement the value this number of times.
+		COPY
+		^switch_addr
+		^switch_addr_indirect
+		COPY
+		0 $switch_addr_indirect
+		^switch_table_elem
+
+		#output table element for debugging
+
+		{ #switch inner loop
+			0 $switch_inner_loop
+
+			#subtract one from the loop variable
+			#On failure, repeat the switch loop!
+			COPY
+			^switchloop
+			^trap
+			DECR
+			0 $switch_table_elem
+
+			#subtract one from the total value.
+			#On failure, we're done!
+			COPY
+			^switch_fail
+			^trap
+			DECR
+			0 $switch_val
+
+
+			GOTO
+			^switch_inner_loop
+		}
+	}
+
+	^switch_fail $switch_fail
+	#Done?
+	GOTO
+	0 $switch_ret_addr
+
+
+### IFMAIN
+
+^finale $finale
+###
