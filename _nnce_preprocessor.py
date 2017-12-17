@@ -1,11 +1,11 @@
 import os
 import sys
 
-class NNPCompilerException(Exception):
+class NNCEPreprocessorException(Exception):
 	pass
 
-def compile_file(filename):
-	return compile(open(filename).readlines(), filename)
+def preprocess(filename):
+	return _preprocess_lines(open(filename).readlines(), filename)
 
 
 def _include_recursive(program_lines, current_file_dir):
@@ -31,7 +31,7 @@ def _include_recursive(program_lines, current_file_dir):
 				return _include_recursive(program_lines, current_file_dir)
 	return program_lines
 
-def compile(program_lines,path):
+def _preprocess_lines(program_lines, path):
 	curr_addr = 0
 
 	name_to_loc = dict()
@@ -63,7 +63,7 @@ def compile(program_lines,path):
 				name_to_loc[addr] = str(curr_addr)
 			else:
 				if curr_addr > int(addr):
-					raise NNPCompilerException(
+					raise NNCEPreprocessorException(
 						"Could not satisfy address %s. Current address = %s. Line %i"
 						% (line, curr_addr, idx + 1))
 				curr_addr = int(addr)
@@ -101,4 +101,4 @@ def compile(program_lines,path):
 
 
 if __name__ == "__main__":
-	print '\n'.join(compile_file(sys.argv[1]))
+	print '\n'.join(preprocess(sys.argv[1]))
