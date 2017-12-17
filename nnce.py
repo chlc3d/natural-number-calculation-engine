@@ -12,9 +12,10 @@ parser.add_argument('--debug', action='store_true', help="Enable debug features 
 parser.add_argument('--write-perf-info', action='store_true', help="Write interpreter performance info to stdout")
 parser.add_argument('--preprocess-only', action='store_true', help="Only preprocess the file; don't run it. Use with --preprocessor-output")
 parser.add_argument('--nn-input-files', default=[], type=str, nargs="+", help = "Input files to NNCE script")
+parser.add_argument('--use-extensions', action='store_true', help="Allow usage of interpreter-defined language extensions (comments and NNCE_INCLUDE calls).")
 args = parser.parse_args()
 
-processed = _nnce_preprocessor.preprocess(args.nnp_file)
+processed = _nnce_preprocessor.preprocess(args.nnp_file, args.use_extensions)
 
 if args.preprocessor_output:
 	with open(args.preprocessor_output, 'w') as f:

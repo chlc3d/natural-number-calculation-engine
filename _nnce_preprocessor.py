@@ -4,13 +4,11 @@ import sys
 class NNCEPreprocessorException(Exception):
 	pass
 
-def preprocess(filename):
-	return _preprocess_lines(open(filename).readlines(), filename)
+def preprocess(filename, use_extensions):
+	return _preprocess_lines(open(filename).readlines(), filename, use_extensions)
 
 
 def _include_recursive(program_lines, current_file_dir):
-	#Zeroth pass:
-	#pull in includes:
 	for idx, line in enumerate(program_lines):
 		line = line.strip()
 		if line.startswith('NNP_INCLUDE'):
@@ -31,7 +29,7 @@ def _include_recursive(program_lines, current_file_dir):
 				return _include_recursive(program_lines, current_file_dir)
 	return program_lines
 
-def _preprocess_lines(program_lines, path):
+def _preprocess_lines(program_lines, path, use_extensions):
 	curr_addr = 0
 
 	name_to_loc = dict()
@@ -39,7 +37,8 @@ def _preprocess_lines(program_lines, path):
 	newlines = []
 
 	# Resolve includes
-	program_lines = _include_recursive(program_lines, os.path.dirname(path))
+	if use_extensions:
+		program_lines = _include_recursive(program_lines, os.path.dirname(path))
 
 	#first pass:
 	#Find symbolic addresses
@@ -48,7 +47,10 @@ def _preprocess_lines(program_lines, path):
 		#remove braces, they're used for the meta-assembler!
 		line = filter(lambda x: x != '{' and x != '}', line)
 		line = line.strip()
-		line = ''.join(line.split('#')[0].split())
+
+		if use_extensions:
+			line = ''.join(line.split('#')[0].split())
+
 		line_segs = line.split("$")
 		if line != '':
 			curr_addr += 1
@@ -101,4 +103,4 @@ def _preprocess_lines(program_lines, path):
 
 
 if __name__ == "__main__":
-	print '\n'.join(preprocess(sys.argv[1]))
+	print '\n'.join(preprocess(sys.argv[1], False))
