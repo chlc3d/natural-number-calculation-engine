@@ -1,0 +1,137 @@
+### EXPORTS
+### postmath_addr
+###
+### diff
+### diff_ret
+### postdiff_addr
+### diff_larger
+### diff_smaller
+
+
+### EXPECTED_DEFS
+### trap
+
+GOTO
+^math_finale
+
+
+### Constants
+0 $math_zero
+
+
+
+### Difference Function
+#Store diff_larger - diff_smaller in diff_ret
+^difference $difference
+	WRITD
+	100
+
+	#Reset diff_ret
+	COPY
+	^math_zero
+	^diff_ret
+
+	#Set trap address
+	COPY
+	^afterfirstloop
+	^trap
+
+	#The first loop decreases the larger number
+	#equal to the amount of occurences of the smaller number
+
+		#decrement smaller
+		DECR $startdiff_loop
+		0 $diff_smaller
+
+		#decrement larger
+		DECR
+		0 $diff_larger
+
+		GOTO
+		^startdiff_loop
+
+	^afterfirstloop $afterfirstloop
+	COPY
+	^diff_larger
+	^diff_larger_decr
+
+	COPY
+	^diff_finale
+	^trap
+
+	#Loop2 decrements diff_larger to 0 while incrementing diff_smaller
+		DECR $loop2
+		0 $diff_larger_decr
+
+		INCR
+		0 $diff_ret
+
+		GOTO
+		^loop2
+
+	^diff_finale $diff_finale
+	GOTO
+	0 $postdiff_addr
+
+0 $mul_larger
+#0 $mul_smaller
+#0 $postmul_addr
+#0 $mul_ret
+
+# Store mul_larger * mul_smaller in mul_ret
+# Note: mul_larger doesn't need to be larger than mul_smaller,
+# it's just less head moves that way.
+^multiply $multiply
+
+	WRITD
+	200
+
+	#Reset mul_ret
+	COPY
+	^math_zero
+	^mul_ret
+
+	#Outer loop runs once for each mul_smaller
+	^startouterloop $startouterloop
+		#Set trap address for outer loop
+		COPY
+		^afterouterloop
+		^trap
+
+		#Test mul_smaller
+		DECR
+		0 $mul_smaller
+
+		#Set trap address for inner loop
+		COPY
+		^startouterloop
+		^trap
+
+		#Copy mul_larger into mul_larger_temp
+		COPY
+		^mul_larger
+		^mul_larger_temp
+
+
+			#test mul_larger_temp
+			DECR $startinnerloop
+			0 $mul_larger_temp
+
+			#We know we can add one to mul_ret
+			INCR
+			0 $mul_ret
+			GOTO
+			^startinnerloop
+
+	#TODO: We could avoid having any code 
+	#after the outer loop by jumping straight
+	#to postmuladdr. Is it better? (has extra indirection)
+	^afterouterloop $afterouterloop
+
+	GOTO
+	0 $postmul_addr
+
+
+
+
+	0 $math_finale

@@ -1,0 +1,280 @@
+### EXPECTED_DEFS
+### $trap
+### math_library.nnp
+
+10 $ten
+
+
+
+
+
+
+#0 $compute_num_arr_start 	#These should be stored as natural numbers -- already converted from ASCII
+# 0 $compute_num_arr_len
+#0 $post_compute_num_addr
+#0 $compute_num_ret
+
+
+0 $compute_num
+	#Reset compute_num_ret
+	COPY
+	^math_zero
+	^compute_num_ret
+
+	^compute_num_loop $compute_num_loop
+		COPY
+		^after_compute_num_loop
+		^trap
+
+		DECR
+		$compute_num_arr_len
+
+		#Multiply the old value in compute_num_ret
+
+		COPY
+		^end_compute_num_loop
+		^postmul_addr
+
+		COPY
+		^ten
+		^mul_smaller
+
+		COPY
+		^compute_num_ret
+		^mul_larger
+
+		GOTO
+		^multiply
+
+		^end_compute_num_loop $end_compute_num_loop
+
+		COPY
+		^mul_ret
+		^compute_num_ret
+
+		#add the current number
+			COPY
+			^compute_num_arr_start
+			^compute_num_arr_start_deref
+
+			COPY
+			0 $compute_num_arr_start_deref
+			^inner_loop_decr
+
+			COPY
+			^inner_loop_after
+			^trap
+
+
+			0 $inner_loop_start
+
+				DECR
+				0 $inner_loop_decr
+
+				INCR
+				0 $compute_num_ret
+
+				COPY
+				^compute_num_ret
+				^middle_out
+
+				WRITD
+				0 $middle_out
+
+				GOTO
+				^inner_loop_start
+
+			^inner_loop_after $inner_loop_after
+
+			#Increment the compute_num_arrt_start
+			INCR
+			0 $compute_num_arr_start
+
+			GOTO
+			^compute_num_loop
+	^after_compute_num_loop $after_compute_num_loop
+
+	COPY
+	^compute_num_ret
+	^wwwww
+
+	WRITD
+	0 $wwwww
+	WRITD
+	1776
+
+	GOTO
+	0 $post_compute_num_addr
+
+
+
+### Parse Num
+### Reads from an input tape until it encounters a non-number
+### converts all numbers to ascii and stores them in $scratch
+### Uses compute_num to compute the number
+### Cleans up scratch
+### Uses switch_leftover = how many we counted after being in last bucket
+
+### EXPECTED_DEFS
+### scratch = 0
+### last_meal 
+### switch.nnp
+### math_library.nnp
+### clean_scratch.nnp
+### post_parsenum_addr
+
+48 $parse_num_sw_table
+10
+250
+
+3 $parse_num_sw_len
+
+^parse_num_sw_table $parse_num_sw_table_addr
+
+^parse_num $parse_num
+
+	0 $scratch_idx
+
+	COPY
+	^scratch
+	^scratch_idx
+
+	COPY
+	^math_zero
+	^pn_scratch_len
+
+	^parse_num_loop $parse_num_loop
+		READ
+		0 $parse_num_input
+
+		COPY
+		^parse_num_sw_table_addr
+		^switch_table_addr
+
+		COPY
+		^parse_num_sw_len
+		^switch_len
+
+		COPY
+		^parse_num_input
+		^switch_val
+
+		COPY
+		^sw_write_results
+		^switch_ret_addr
+
+		GOTO
+		^switch
+
+		^sw_write_results $sw_write_results
+
+		#On switch result of 1, write to scratch,
+		#increment idx and continue loop. Otherwise go to parseNum finale
+
+		COPY
+		^parse_num_finale
+		^trap
+
+
+		COPY
+		^switch_ret_val
+		^pn_switch_decr1
+
+		DECR
+		0 $pn_switch_decr1
+
+		COPY
+		^pn_switch_decr1
+		^pn_switch_decr2
+
+		DECR
+		0 $pn_switch_decr2
+
+		COPY
+		^parse_num_isnum
+		^trap
+
+		COPY
+		^pn_switch_decr2
+		^pn_switch_decr3
+
+		DECR
+		0 $pn_switch_decr3
+
+		GOTO
+		^parse_num_finale
+
+		^parse_num_isnum $parse_num_isnum
+
+		#write to scratch,
+		#increment idx and continue loop.
+		
+		COPY
+		^scratch_idx
+		^pn_scratch_idx_indirect
+
+		COPY
+		^switch_leftovers
+		0 $pn_scratch_idx_indirect
+
+		COPY
+		^scratch_idx
+		^pn_scratch_idx_increr
+
+		INCR
+		0 $pn_scratch_idx_increr
+
+		COPY
+		^pn_scratch_idx_increr
+		^scratch_idx
+
+		INCR
+		0 $pn_scratch_len
+
+		COPY
+		^switch_leftovers
+		^test_write
+
+		WRITD
+		0 $test_write
+		GOTO
+		^parse_num_loop
+
+	^parse_num_finale $ parse_num_finale
+	# put it in last meal
+	# Compute number, store in parse_num_ret_val
+	#Clean up scratch.
+	COPY
+	^parse_num_input
+	^last_meal
+
+	COPY
+	^scratch
+	^compute_num_arr_start
+
+	COPY
+	^pn_scratch_len
+	^compute_num_arr_len
+	
+	COPY
+	^pn_post_computenum
+	^post_compute_num_addr
+
+
+
+	#0 $compute_num_arr_start 	#These should be stored as natural numbers -- already converted from ASCII
+	# 0 $compute_num_arr_len
+	#0 $post_compute_num_addr
+	#0 $compute_num_ret
+
+	GOTO
+	^compute_num 
+
+	^pn_post_computenum $pn_post_computenum
+
+	WRITD
+	99999
+
+	#Clean up scracth
+	GOTO
+	0 $post_parsenum_addr

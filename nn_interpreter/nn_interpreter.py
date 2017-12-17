@@ -4,6 +4,9 @@ import argparse
 
 EOF = 0
 
+class NaturalNumberRuntimeException(Exception):
+	pass
+
 class State:
 	def __init__(self, **kwargs):
 		self.memory = kwargs['memory']
@@ -40,7 +43,9 @@ class State:
 
 	def get_int(self):
 		val = self.get()
-		assert(type(val) is int)
+		if type(val) is not int:
+			raise NaturalNumberRuntimeException(
+				'Expected int, saw %s on line %s' % (val, self.pc))
 		return val
 
 	def set(self, val):

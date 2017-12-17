@@ -1,15 +1,45 @@
+import os
 import sys
 
+class NNPCompilerException(Exception):
+	pass
+
 def compile_file(filename):
-	return compile(open(filename).readlines())
+	return compile(open(filename).readlines(), filename)
 
 
-def compile(program_lines):
+def _include_recursive(program_lines, current_file_dir):
+	#Zeroth pass:
+	#pull in includes:
+	for idx, line in enumerate(program_lines):
+		line = line.strip()
+		if line.startswith('NNP_INCLUDE'):
+			#Pull in include file
+			#(Use relative path from this NNP file)
+			path = line.split(' ')[1]
+			with open(os.path.join(current_file_dir, path)) as f:
+				new_lines = f.readlines()
+				
+				# Call recursively with the new file
+				new_lines = _include_recursive(new_lines, os.path.dirname(path))
+
+				# Add new_lines to program_lines
+				program_lines = program_lines[:idx] + new_lines + program_lines[idx+1:]
+
+				# Call _include_recursive again to reset the loop
+				# TODO(tstamper): we should do this in a more efficent way
+				return _include_recursive(program_lines, current_file_dir)
+	return program_lines
+
+def compile(program_lines,path):
 	curr_addr = 0
 
 	name_to_loc = dict()
 
 	newlines = []
+
+	# Resolve includes
+	program_lines = _include_recursive(program_lines, os.path.dirname(path))
 
 	#first pass:
 	#Find symbolic addresses
@@ -32,7 +62,10 @@ def compile(program_lines):
 				assert addr not in name_to_loc, "Multiple definitions of %s (line %i)" % (addr, idx+1)
 				name_to_loc[addr] = str(curr_addr)
 			else:
-				assert curr_addr <= int(addr), "Could not satisfy current address in %s" % line
+				if curr_addr > int(addr):
+					raise NNPCompilerException(
+						"Could not satisfy address %s. Current address = %s. Line %i"
+						% (line, curr_addr, idx + 1))
 				curr_addr = int(addr)
 		else:
 			assert len(line_segs) == 1, "too many sections in %s" % line

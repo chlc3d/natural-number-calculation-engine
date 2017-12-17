@@ -180,8 +180,7 @@ COPY
 	^da_incr
 	^dropaddr
 
-	0 $firstdroploop
-	#update result value
+	0 $firstdroploop	#update result value
 	{
 		INCR
 		0 $dropretval
