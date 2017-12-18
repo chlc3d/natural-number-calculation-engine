@@ -1,4 +1,4 @@
-bfi.nnp numwarp.bf:
+bfi.nnce numwarp.bf:
 expected: 
 <built-in method replace of str object at 0x00000000027020D0>.
 output: 

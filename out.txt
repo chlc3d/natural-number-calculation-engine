@@ -1,4 +1,4 @@
-difference.nnp
+difference.nnce
 200 $const_1
 
 400 $const_2

@@ -38,9 +38,9 @@ GOTO $98
 0 $trap
 
 
-NNP_INCLUDE math_library.nnp
-NNP_INCLUDE parseNum.nnp
-NNP_INCLUDE switch.nnp
+NNCE_INCLUDE math_library.nnce
+NNCE_INCLUDE parseNum.nnce
+NNCE_INCLUDE switch.nnce
 
 ^write_results $write_results
 

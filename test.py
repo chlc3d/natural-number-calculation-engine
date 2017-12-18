@@ -1,9 +1,9 @@
-import nn_interpreter.nn_interpreter as nn_interpreter
-import nnp_compiler.nnp_compiler as nnp_compiler
+import _nnce_interpreter
+import _nnce_preprocessor
 import os
 
 def validate(nn_program, args, expected):
-	state = nn_interpreter.interpret(nn_program, args, debug=False)
+	state = _nnce_interpreter.interpret(nn_program, args, debug=False)
 	print "expected: \n%s." % expected
 	print "output: \n%s." % state.output
 
@@ -12,7 +12,7 @@ def validate(nn_program, args, expected):
 bf_dir = 'examples/brainfuck'
 bf_test_dir = 'examples/brainfuck/test'
 
-bfi_compiled = nnp_compiler.compile_file(os.path.join(bf_dir, 'bfi.nnp'))
+bfi_compiled = _nnce_preprocessor.preprocess(os.path.join(bf_dir, 'bfi.nnp'), True)
 
 catinput = os.path.join(bf_test_dir, 'cat/catinput.txt')
 with open(catinput, 'r') as f:

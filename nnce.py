@@ -6,7 +6,7 @@ import sys
 
 parser = argparse.ArgumentParser(description="Compile and run an NN++ program")
 
-parser.add_argument('nnp_file', help="NN++ file to run")
+parser.add_argument('nnce_file', help="NN++ file to run")
 parser.add_argument('--preprocessor-output', type=str, help="Where to store output file")
 parser.add_argument('--debug', action='store_true', help="Enable debug features and output for interpreter")
 parser.add_argument('--write-perf-info', action='store_true', help="Write interpreter performance info to stdout")
@@ -15,7 +15,7 @@ parser.add_argument('--nn-input-files', default=[], type=str, nargs="+", help = 
 parser.add_argument('--use-extensions', action='store_true', help="Allow usage of interpreter-defined language extensions (comments and NNCE_INCLUDE calls).")
 args = parser.parse_args()
 
-processed = _nnce_preprocessor.preprocess(args.nnp_file, args.use_extensions)
+processed = _nnce_preprocessor.preprocess(args.nnce_file, args.use_extensions)
 
 if args.preprocessor_output:
 	with open(args.preprocessor_output, 'w') as f:

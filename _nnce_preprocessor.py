@@ -11,9 +11,9 @@ def preprocess(filename, use_extensions):
 def _include_recursive(program_lines, current_file_dir):
 	for idx, line in enumerate(program_lines):
 		line = line.strip()
-		if line.startswith('NNP_INCLUDE'):
+		if line.startswith('NNCE_INCLUDE'):
 			#Pull in include file
-			#(Use relative path from this NNP file)
+			#(Use relative path from this NNCE file)
 			path = line.split(' ')[1]
 			with open(os.path.join(current_file_dir, path)) as f:
 				new_lines = f.readlines()

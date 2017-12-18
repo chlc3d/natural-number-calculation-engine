@@ -15,7 +15,7 @@ GOTO
 GOTO $98
 0 $trap
 
-NNP_INCLUDE math_library.nnp
+NNCE_INCLUDE math_library.nnce
 
 
 ^start $start

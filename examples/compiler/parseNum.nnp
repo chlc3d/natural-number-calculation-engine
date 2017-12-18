@@ -1,6 +1,6 @@
 ### EXPECTED_DEFS
 ### $trap
-### math_library.nnp
+### math_library.nnce
 
 10 $ten
 
@@ -118,9 +118,9 @@
 ### EXPECTED_DEFS
 ### scratch = 0
 ### last_meal 
-### switch.nnp
-### math_library.nnp
-### clean_scratch.nnp
+### switch.nnce
+### math_library.nnce
+### clean_scratch.nnce
 ### post_parsenum_addr
 
 48 $parse_num_sw_table
