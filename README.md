@@ -45,6 +45,9 @@ Each cell specifier contains either one of the seven NNCE commands or a number. 
 
 The first non-empty line of an NNCE program corresponds to Cell 0, and so on. Empty lines are ignored by NNCE.
 
+
+### Address Labels
+
 Cell specifiers may also optionally contain an *address label*. The address label defines what address this cell specifier should initialize. The line after the address label will specify the next cell, and so on.
 
 This program initalizes cells 0,7,8, and 20 to the values 1,2,3, and 4; respectively:
@@ -59,6 +62,32 @@ If a single address is specified multiple times in an NNCE program, such as in t
 	GOTO $10
 	20
 	30 $11
+
+
+### Named Labels
+
+NNCE also allows you to place a name instead of a number in the label field of a cell descriptor. This functions completely differently from numeric labels.
+
+The named label itself has no impact on the program's semantics in that location. NNCE will only make a note of the label and its location in the program.
+
+However, using a named label allows you to refer to that line in other places in your program.  The engine will translate other uses of that label into a numeric literal equal to the named address.
+
+Example:
+	GOTO
+	^my_location
+
+	INCR $my_location
+	^my_location
+
+is equivalent to
+	GOTO
+	2
+	INCR $2
+	2
+
+Named labels make it easier to write useful GOTO statements, since you don't have to do manual bookkeeping if you relocate a procedure.
+
+NNCE implementations should support using labels before their point of declaration (Such as in the example above).
 
 
 ### Comments
@@ -90,8 +119,9 @@ Example
 	GOTO
 	20
 
+
 ## End of execution
-The NNCE program halts execution if there is no command in the current cell or any cell afterward.
+The NNCE program halts execution if there are no commands in the instruction pointer's current cell, and all future cells are empty.
 
 ## File Conventions
 
