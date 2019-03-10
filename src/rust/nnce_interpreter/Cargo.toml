@@ -1,0 +1,8 @@
+[package]
+name = "nnce_interpreter"
+version = "0.1.0"
+authors = ["trstamper"]
+edition = "2018"
+
+[dependencies]
+regex = "1"

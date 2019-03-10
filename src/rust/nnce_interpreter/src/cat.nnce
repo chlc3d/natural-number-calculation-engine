@@ -1,0 +1,7 @@
+INCR
+INCR
+DECR
+42
+GOTO
+errro
+GOTO #Hello
