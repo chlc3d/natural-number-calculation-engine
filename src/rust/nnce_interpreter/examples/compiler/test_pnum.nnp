@@ -1,0 +1,71 @@
+
+7 $table
+4
+3
+1
+2
+5
+2
+2
+2
+1
+
+5 $mylen
+
+^table $table_addr
+
+
+#COPY
+#^table_addr
+#^compute_num_arr_start
+#
+#COPY
+#^mylen
+#^compute_num_arr_len
+#
+#COPY
+#^write_results
+#^post_compute_num_addr
+#
+#GOTO
+#^compute_num
+
+GOTO
+^write_results
+
+0 $last_meal
+GOTO $98
+0 $trap
+
+
+NNCE_INCLUDE math_library.nnce
+NNCE_INCLUDE parseNum.nnce
+NNCE_INCLUDE switch.nnce
+
+^write_results $write_results
+
+COPY
+^compute_num_ret
+^write_loc
+
+WRITD
+0 $write_loc
+
+COPY
+^myafterparsenum
+^post_parsenum_addr
+
+### Test the parse command
+GOTO
+^parse_num
+
+^myafterparsenum $myafterparsenum
+
+COPY
+^compute_num_ret
+^writloc_2
+
+WRITD
+0 $writloc_2
+
+0 $scratch

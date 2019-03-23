@@ -1,0 +1,21 @@
+READ $1
+0    $2
+
+COPY
+2
+7 #Test-for-zero register
+
+# If the input is 0, we reached the end of the file
+# and should stop executing.
+DECR
+0    $7
+
+COPY $mario
+2
+12 #Output register
+
+WRIT
+0    $12
+
+GOTO
+0

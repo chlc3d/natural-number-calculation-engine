@@ -1,0 +1,53 @@
+200 $const_1
+400 $const_2
+
+COPY
+^const_2
+^diff_larger
+
+COPY
+^const_1
+^diff_smaller
+
+GOTO
+^start
+
+GOTO $98
+0 $trap
+
+NNCE_INCLUDE math_library.nnce
+
+
+^start $start
+
+COPY
+^mypostdiff
+^postdiff_addr
+
+GOTO
+^difference
+
+^mypostdiff $mypostdiff
+COPY
+^diff_ret
+^mul_smaller
+
+COPY
+^diff_ret
+^mul_larger
+
+COPY 
+^myfinish
+^postmul_addr
+
+GOTO
+^multiply
+
+^myfinish $myfinish
+
+COPY
+^mul_ret
+^example_out
+
+WRITD 
+0 $example_out

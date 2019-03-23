@@ -1,0 +1,80 @@
+This is a plan for an NN+ compiler written in NN+
+
+
+Globals:
+
+	Infinite:
+		symbols section - starts at $symbols_addr
+			These contain 0-terminated ascii sequences, each followed by a natural number (an address),
+			then followed by a list of referencing addresses 
+			(Each is stored as a 1 followed by the value)
+			(this is zero-terminated)
+		Instruction section - starts at $inst_addr
+
+		These are interleaved, so ptrs need to be incr'd by 2
+
+	Variables:
+		iptr is the pointer to the line we are storing data on
+			iptr stores an encoded value that represents a command or a number
+
+parse
+
+	handle_line|Read|(posthandle_addr,posthandle_eof_addr) -> |iptr, data_section|
+	Handle lines for each file to populate all instructions
+
+parse_num
+	difference(diff_larger, diff_smaller, postdiff_addr) -> diff_ret
+	multiple(mul_larger, mul_smaller, postmul_addr) -> mul_ret
+	
+
+
+
+parse_line|Read|(posthandle_addr, eof_addr) -> |iptr, data_section|
+	get_first_ch|Read|() -> first_chr (skips past whitespace)
+	switch_range(sr_char, sr_table_start_addr postsr_addr) -> sr_command_id_ret
+
+	Command ID used to index into functions
+		#:		35	skip_line
+		0-9:	48	set_num
+			parse_num
+		C(opy)	67	set_command
+		D(ecr)	68	''
+		G(oto)	71	''
+		I(ncr)	73	''
+		R(ead)	82	''
+		W(rit)	87	''
+
+	These all store "cell_value" except for skip_line
+	^These commands read up to the $ sign or end of line (# always goes to end of line).
+	They set a "last_meal" variable to see if a $ or ^ Sign got eaten.
+
+	If it did, call:
+		read_label|Read|(postreadlabel_addr) -> readlabel_num_ret
+			Switch on get_first_chr
+				Less than 48: read_text_label
+				TODO newline:
+				0-9 48 parse_num
+				A or higher 65 read_text_label
+
+			If we called parse_num
+				Update iptr value based on readlabel_num_ret
+					Shouldn't need its own function?
+			Otherwise we called read_text_label
+				read_text_label switches on whether it was a $ or ^
+				$:
+					Write this symbol and associated address to symbols
+				^:
+					If this symbol isn't already in symbols, add it.
+					Then add a note that this address references it. 
+
+
+
+
+
+Compiler plan:
+Continuously call read_line in a loop until we reach EOF
+
+
+Go through symbols table and copy each reference into the appropriate spot
+
+Go through instructions and write.
